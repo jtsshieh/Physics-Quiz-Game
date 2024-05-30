@@ -266,6 +266,7 @@ export default function RightHandRule() {
 											flexDirection: 'column',
 											height: '100%',
 											p: 2,
+											position: 'fixed',
 										}),
 										isVertical &&
 											css({
