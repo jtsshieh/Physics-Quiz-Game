@@ -1,4 +1,4 @@
-import { Vector } from '../../utils';
+import { Vector } from './utils';
 
 export const Directions = {
 	IntoPage: 0,
