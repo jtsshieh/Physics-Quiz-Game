@@ -100,6 +100,8 @@ export default function VectorField({
 	}
 	return (
 		<svg width="200" height="200" x={x} y={y}>
+			<rect x={0} y={0} height={200} width={200} fill="white" stroke="black" />,
+			{vectorField}
 			<foreignObject x="75" y="75" width="50" height="50">
 				<div
 					style={{
@@ -114,7 +116,6 @@ export default function VectorField({
 					<MathJax>{'\\(\\mathbf{\\vec{B}}\\)'}</MathJax>
 				</div>
 			</foreignObject>
-			{vectorField}
 		</svg>
 	);
 }
