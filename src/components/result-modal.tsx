@@ -22,7 +22,7 @@ export function ResultModal({
 					alignItems: 'center',
 					justifyContent: 'center',
 				}),
-				correct && css({ bgColor: 'rgba(255, 199, 197, 0.1)'}),
+				correct && css({ bgColor: 'rgba(119, 236, 149, 0.2)'}),
 				!correct && css({ bgColor: 'rgba(255, 199, 197, 0.2)' })
 			)}
 		>
