@@ -131,6 +131,7 @@ export default function RightHandRule() {
 				direction: 'row',
 				justifyContent: 'center',
 				w: '100vw',
+				h: '100vh',
 				p: '4',
 			})}
 		>
@@ -139,6 +140,7 @@ export default function RightHandRule() {
 					direction: 'column',
 					alignItems: 'center',
 					maxWidth: '750px',
+					flex: 'auto',
 				})}
 			>
 				<ResultModal
@@ -184,6 +186,8 @@ export default function RightHandRule() {
 						direction: 'column',
 						gap: '4',
 						alignItems: 'center',
+						flex: 'auto',
+						minHeight: 0,
 					})}
 				>
 					<Typography level="body-lg">
@@ -194,7 +198,10 @@ export default function RightHandRule() {
 						Select the direction of magnetic force the particle will experience
 						when initially entering the magnetic field.
 					</Typography>
+
 					<svg
+						width="100%"
+						height="100%"
 						className={cx(
 							isVertical && css({ maxH: '400px' }),
 							!isVertical && css({ maxW: '400px' }),
