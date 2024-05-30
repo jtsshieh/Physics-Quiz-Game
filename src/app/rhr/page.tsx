@@ -11,13 +11,14 @@ import VectorField, {
 	OutOfPage,
 	VerticalArrow,
 } from '../../components/vector-field';
-import { crossProduct, vecEq } from '../../utils';
+import { crossProduct, flip, vecEq } from '../../utils';
 import Link from 'next/link';
-import { css } from '../../../styled-system/css';
+import { css, cx } from '../../../styled-system/css';
 import { stack } from '../../../styled-system/patterns';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { isStaticPropertyKey } from '@vue/compiler-core';
 import { Settings } from '@mui/icons-material';
+import { erase } from 'sisteransi';
+import lineEnd = erase.lineEnd;
 
 const ArrowDirections = {
 	[Directions.IntoPage]: (
@@ -83,17 +84,34 @@ export default function RightHandRule() {
 		],
 	);
 	const [elCharge, setElCharge] = useState(Math.random() > 0.5);
+	const [chargeDirection, setChargeDirection] = useState(
+		Object.values(Directions)[Math.floor(Math.random() * 4) + 2],
+	);
+	const isVertical =
+		chargeDirection == Directions.Up || chargeDirection == Directions.Down;
+
+	const [circleX, circleY] = [
+		isVertical ? 100 : chargeDirection === Directions.Left ? 150 : 50,
+		!isVertical ? 100 : chargeDirection === Directions.Up ? 150 : 50,
+	];
+	const [lineEndX, lineEndY] = [
+		isVertical ? 100 : chargeDirection == Directions.Right ? 150 : 50,
+		!isVertical ? 100 : chargeDirection == Directions.Down ? 150 : 50,
+	];
 
 	function createCheckAnswer(direction: number) {
 		const fieldVector = DirectionVectors[vfDirection];
-		const velocity =
-			DirectionVectors[elCharge ? Directions.Right : Directions.Left];
+		const velocity = elCharge
+			? DirectionVectors[chargeDirection]
+			: flip(DirectionVectors[chargeDirection]);
 
 		const answer = crossProduct(velocity, fieldVector);
 
 		const answerDirection = Object.entries(DirectionVectors).findIndex(
 			([, vector]) => vecEq(answer, vector),
 		);
+
+		console.log(fieldVector, vfDirection);
 		if (direction == answerDirection) {
 			return () => {
 				setCorrectState(true);
@@ -135,6 +153,9 @@ export default function RightHandRule() {
 								],
 							);
 							setElCharge(Math.random() > 0.5);
+							setChargeDirection(
+								Object.values(Directions)[Math.floor(Math.random() * 4) + 2],
+							);
 						}
 					}}
 				/>
@@ -173,38 +194,93 @@ export default function RightHandRule() {
 						Select the direction of magnetic force the particle will experience
 						when initially entering the magnetic field.
 					</Typography>
-					<svg className={css({ maxWidth: '400px' })} viewBox="0 0 400 200">
-						<VectorField x={200} y={0} direction={vfDirection} />
-						<circle cx={50} cy={100} stroke="black" fill="none" r={10} />
-						<polyline points={'45, 100, 55, 100'} stroke="black" />
-
-						{elCharge && <polyline points={'50, 95, 50, 105'} stroke="black" />}
-						{/*<Arrow points={[75,100, 175, 100]} stroke="black"/>*/}
-						<defs>
-							<marker
-								id="arrow"
-								viewBox="0 0 10 10"
-								refX="5"
-								refY="5"
-								markerWidth="6"
-								markerHeight="6"
-								orient="auto-start-reverse"
-							>
-								<path d="M 0 0 L 10 5 L 0 10 z" />
-							</marker>
-						</defs>
-
-						<line
-							x1="100"
-							y1="100"
-							x2="150"
-							y2="100"
-							stroke="black"
-							markerEnd="url(#arrow)"
+					<svg
+						className={cx(
+							isVertical && css({ maxH: '400px' }),
+							!isVertical && css({ maxW: '400px' }),
+						)}
+						viewBox={`0 0 ${isVertical ? 200 : 400} ${isVertical ? 400 : 200}`}
+					>
+						<VectorField
+							x={isVertical || chargeDirection === Directions.Left ? 0 : 200}
+							y={!isVertical || chargeDirection === Directions.Up ? 0 : 200}
+							direction={vfDirection}
 						/>
-						<foreignObject x="120" y="100" width="50" height="50">
-							<MathJax>{'\\(v\\)'}</MathJax>
-						</foreignObject>
+
+						<svg
+							x={isVertical || chargeDirection === Directions.Right ? 0 : 200}
+							y={!isVertical || chargeDirection === Directions.Down ? 0 : 200}
+							width="200"
+							height="200"
+						>
+							<circle
+								cx={circleX}
+								cy={circleY}
+								stroke="black"
+								fill="none"
+								r={10}
+							/>
+							<polyline
+								points={`${circleX - 5}, ${circleY}, ${circleX + 5}, ${circleY}`}
+								stroke="black"
+							/>
+
+							{elCharge && (
+								<polyline
+									points={`${circleX}, ${circleY - 5}, ${circleX}, ${circleY + 5}`}
+									stroke="black"
+								/>
+							)}
+							<defs>
+								<marker
+									id="arrow"
+									viewBox="0 0 10 10"
+									refX="5"
+									refY="5"
+									markerWidth="6"
+									markerHeight="6"
+									orient="auto-start-reverse"
+								>
+									<path d="M 0 0 L 10 5 L 0 10 z" />
+								</marker>
+							</defs>
+
+							<line
+								x1={100}
+								y1={100}
+								x2={lineEndX}
+								y2={lineEndY}
+								stroke="black"
+								markerEnd="url(#arrow)"
+							/>
+							<foreignObject
+								x={chargeDirection === Directions.Left ? lineEndX : 100}
+								y={chargeDirection === Directions.Up ? lineEndY : 100}
+								width="50"
+								height="50"
+							>
+								<div
+									className={cx(
+										css({
+											display: 'flex',
+											flexDirection: 'column',
+											height: '100%',
+											p: 2,
+										}),
+										isVertical &&
+											css({
+												justifyContent: 'center',
+											}),
+										!isVertical &&
+											css({
+												alignItems: 'center',
+											}),
+									)}
+								>
+									<MathJax inline={true}>{'\\(v\\)'}</MathJax>
+								</div>
+							</foreignObject>
+						</svg>
 					</svg>
 				</div>
 

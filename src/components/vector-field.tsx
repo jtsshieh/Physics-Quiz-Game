@@ -69,7 +69,6 @@ export default function VectorField({
 	y: number;
 }) {
 	const vectorField: JSX.Element[] = [];
-
 	if (direction == 0) {
 		for (let x = 25; x < 200; x += 50) {
 			for (let y = 25; y < 200; y += 50) {
@@ -84,11 +83,11 @@ export default function VectorField({
 		}
 	} else if (direction == 2) {
 		for (let y = 25; y < 200; y += 50) {
-			vectorField.push(<HorizontalArrow x1={25} x2={175} y={y} />);
+			vectorField.push(<HorizontalArrow x1={175} x2={25} y={y} />);
 		}
 	} else if (direction == 3) {
 		for (let y = 25; y < 200; y += 50) {
-			vectorField.push(<HorizontalArrow x1={175} x2={25} y={y} />);
+			vectorField.push(<HorizontalArrow x1={25} x2={175} y={y} />);
 		}
 	} else if (direction == 4) {
 		for (let x = 25; x < 200; x += 50) {
