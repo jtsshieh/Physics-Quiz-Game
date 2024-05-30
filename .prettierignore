@@ -1,6 +1,2 @@
-.config
-.build
-.cache
-.upm
-.tmp
-.git
+node_modules
+.next

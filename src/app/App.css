@@ -1,0 +1,68 @@
+main {
+	text-align: center;
+}
+
+.empirical-formula {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.empirical-formula .inputs {
+	display: flex;
+	gap: 1rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+
+.empirical-formula .inputs div {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.element-input {
+	width: 4rem;
+}
+
+.modal-outer {
+	background-blend-mode: multiply;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.modal-incorrect {
+	background-color: rgba(255, 199, 197, 0.1);
+}
+
+.modal-correct {
+	background-color: rgba(119, 236, 149, 0.2);
+}
+
+.inputs {
+	display: flex;
+	gap: 1rem;
+	width: 100%;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.inputs .MuiInput-root {
+	flex: 1;
+}
+
+.homepage-buttons {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+}
