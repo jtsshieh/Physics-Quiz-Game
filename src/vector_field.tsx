@@ -79,8 +79,8 @@ export default function VectorField({direction, x, y}: { direction: number, x: n
     }
     return <svg width="200" height="200" x={x} y={y}>
         <foreignObject x="75" y="75" width="50" height="50" >
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                <MathJax>{"\\(\\boldsymbol{\\vec{B}}\\)"}</MathJax>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', position: 'fixed' }}>
+                <MathJax>{"\\(\\mathbf{\\vec{B}}\\)"}</MathJax>
             </div>
         </foreignObject>
         {vectorField}
