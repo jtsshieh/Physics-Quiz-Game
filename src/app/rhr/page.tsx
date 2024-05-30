@@ -13,6 +13,8 @@ import VectorField, {
 } from '../../components/vector-field';
 import { crossProduct, vecEq } from '../../utils';
 import Link from 'next/link';
+import { css } from '../../../styled-system/css';
+import { stack } from '../../../styled-system/patterns';
 
 const ArrowDirections = {
 	[Directions.IntoPage]: (
@@ -55,12 +57,12 @@ const ArrowDirections = {
 		<svg width="50" height="50">
 			<foreignObject x="0" y="0" width="50" height="50">
 				<div
-					style={{
+					className={css({
 						display: 'flex',
 						justifyContent: 'center',
 						alignItems: 'center',
 						height: '100%',
-					}}
+					})}
 				>
 					<MathJax>{'\\(\\text{None}\\)'}</MathJax>
 				</div>
@@ -77,7 +79,7 @@ export default function RightHandRule() {
 			Math.floor(Math.random() * Object.keys(Directions).length)
 		],
 	);
-	const [elCharge, setElCharge] = useState(Math.random() > 0.5 ? true : false);
+	const [elCharge, setElCharge] = useState(Math.random() > 0.5);
 
 	function createCheckAnswer(direction: number) {
 		const fieldVector = DirectionVectors[vfDirection];
@@ -103,19 +105,19 @@ export default function RightHandRule() {
 	}
 
 	return (
-		<div className="empirical-formula">
+		<div className={stack({ direction: 'column', alignItems: 'center' })}>
 			<ResultModal
 				open={modalOpen}
 				correct={correctState}
 				setClose={() => {
 					setModalOpen(false);
-					if (correctState === true) {
+					if (correctState) {
 						setVFDirection(
 							Object.values(Directions)[
 								Math.floor(Math.random() * Object.keys(Directions).length)
 							],
 						);
-						setElCharge(Math.random() > 0.5 ? true : false);
+						setElCharge(Math.random() > 0.5);
 					}
 				}}
 			/>
@@ -168,7 +170,12 @@ export default function RightHandRule() {
 			<Typography level="body-md">
 				What direction is the magnetic force?
 			</Typography>
-			<div className="inputs">
+			<div className={stack({
+				direction: 'row',
+				gap: '2',
+				flexWrap: 'wrap',
+				justifyContent: 'center',
+			})}>
 				{Object.entries(ArrowDirections).map(([direction, component]) => {
 					return (
 						<Button
