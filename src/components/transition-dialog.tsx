@@ -5,11 +5,11 @@ import { ModalDialog } from '@mui/joy';
 
 export function TransitionDialog({
 	open,
-	setOpen,
+	onClose,
 	children,
 }: {
 	open: boolean;
-	setOpen: (newState: boolean) => void;
+	onClose: () => void;
 	children: ReactNode;
 }) {
 	return (
@@ -18,7 +18,7 @@ export function TransitionDialog({
 				<Modal
 					keepMounted
 					open={!['exited', 'exiting'].includes(state)}
-					onClose={() => setOpen(false)}
+					onClose={onClose}
 					slotProps={{
 						backdrop: {
 							sx: {

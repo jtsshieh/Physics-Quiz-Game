@@ -1,6 +1,6 @@
 'use client';
 import { ResultModal } from '../../components/result-modal';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
 	Button,
 	DialogTitle,
@@ -26,6 +26,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { TransitionDialog } from '../../components/transition-dialog';
 import { RHRProblemType } from './interfaces';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 const problemTypes = [new ParticleLaunch()];
 
@@ -44,7 +45,49 @@ export default function RightHandRule<T>() {
 	);
 	const [gameState, setGameState] = useState(problemType.resetState());
 
-	const [mustSelectProblem, setMustSelectProblem] = useState(false);
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const pathname = usePathname();
+
+	const search = searchParams.get('s');
+
+	useEffect(() => {
+		const fullPool = problemTypes.map(({ id }) => id);
+
+		if (!search) {
+			router.push(pathname + '?' + createQueryString('s', fullPool.join(',')));
+			return;
+		}
+
+		const providedTypes = search.split(',');
+		const filteredTypes = providedTypes.filter((a) => fullPool.includes(a));
+
+		// no results left -> populate default pool
+		if (filteredTypes.length === 0) {
+			router.push(pathname + '?' + createQueryString('s', fullPool.join(',')));
+			return;
+		}
+
+		// filtered results -> update query string with filtered results
+		if (providedTypes.length !== filteredTypes.length) {
+			router.push(
+				pathname + '?' + createQueryString('s', filteredTypes.join(',')),
+			);
+			return;
+		}
+
+		setProblemPool(filteredTypes);
+	}, [search]);
+
+	const createQueryString = useCallback(
+		(name: string, value: string) => {
+			const params = new URLSearchParams(searchParams.toString());
+			params.set(name, value);
+
+			return params.toString();
+		},
+		[searchParams],
+	);
 
 	const [hasMounted, setHasMounted] = useState(false);
 	useEffect(() => {
@@ -69,9 +112,9 @@ export default function RightHandRule<T>() {
 		}
 	}
 
-	function genNewProblem() {
-		const problemTypeId =
-			problemPool[Math.floor(Math.random() * problemPool.length)];
+	function genNewProblem(newPool?: string[]) {
+		const pool = newPool ?? problemPool;
+		const problemTypeId = pool[Math.floor(Math.random() * pool.length)];
 
 		const newProblemType = problemTypes.find(({ id }) => id === problemTypeId);
 
@@ -99,16 +142,13 @@ export default function RightHandRule<T>() {
 					flex: 'auto',
 				})}
 			>
-				<Snackbar
-					autoHideDuration={5000}
-					anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
-					open={mustSelectProblem}
-					onClose={() => setMustSelectProblem(false)}
-					variant="soft"
-				>
-					At least one problem type must be selected.
-				</Snackbar>
-				<TransitionDialog open={helpOpen} setOpen={setHelpOpen}>
+				<SettingsMenu
+					settingsOpen={settingsOpen}
+					setSettingsOpen={setSettingsOpen}
+					currentPool={problemPool}
+					genNewProblem={genNewProblem}
+				/>
+				<TransitionDialog open={helpOpen} onClose={() => setHelpOpen(false)}>
 					<ModalClose />
 					<DialogTitle>
 						<HelpIcon /> Problem Information
@@ -125,65 +165,6 @@ export default function RightHandRule<T>() {
 							<b>Description</b>: {problemType.description}
 						</Typography>
 					</DialogContent>
-				</TransitionDialog>
-				<TransitionDialog open={settingsOpen} setOpen={setSettingsOpen}>
-					<ModalClose />
-					<DialogTitle>
-						<SettingsIcon />
-						Right Hand Rule Settings
-					</DialogTitle>
-					<Divider />
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							genNewProblem();
-							setSettingsOpen(false);
-						}}
-					>
-						<List
-							size="sm"
-							sx={{
-								[`& .${checkboxClasses.root}`]: {
-									alignItems: 'center',
-								},
-							}}
-						>
-							{problemTypes.map(({ id, name, description }) => (
-								<ListItem key={id}>
-									<Checkbox
-										overlay
-										variant="soft"
-										checked={problemPool.includes(id)}
-										onChange={(e) => {
-											if (e.target.checked) {
-												setProblemPool((val) => [...val, id]);
-											} else if (problemPool.length === 1) {
-												setMustSelectProblem(true);
-											} else {
-												setProblemPool((val) => val.filter((a) => a !== id));
-											}
-										}}
-										label={
-											<>
-												<Typography level="body-md">
-													{name}{' '}
-													<Typography sx={{ color: 'grey' }}>({id})</Typography>
-												</Typography>
-												<Typography level="body-xs" sx={{ display: 'block' }}>
-													{description}
-												</Typography>
-											</>
-										}
-									/>
-								</ListItem>
-							))}
-						</List>
-						<DialogActions>
-							<Button type="submit" variant="soft">
-								Done
-							</Button>
-						</DialogActions>
-					</form>
 				</TransitionDialog>
 				<ResultModal
 					open={checkerOpen}
@@ -267,5 +248,120 @@ export default function RightHandRule<T>() {
 				</div>
 			</div>
 		</div>
+	);
+}
+
+function SettingsMenu({
+	settingsOpen,
+	setSettingsOpen,
+	currentPool,
+	genNewProblem,
+}: {
+	settingsOpen: boolean;
+	setSettingsOpen: (newState: boolean) => void;
+	currentPool: string[];
+	genNewProblem: (newPool: string[]) => void;
+}) {
+	const [mustSelectProblem, setMustSelectProblem] = useState(false);
+	const [tempPool, setTempPool] = useState(currentPool);
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const createQueryString = useCallback(
+		(name: string, value: string) => {
+			const params = new URLSearchParams(searchParams.toString());
+			params.set(name, value);
+
+			return params.toString();
+		},
+		[searchParams],
+	);
+
+	useEffect(() => {
+		setTempPool(currentPool);
+	}, [currentPool]);
+
+	return (
+		<>
+			<Snackbar
+				autoHideDuration={5000}
+				anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+				open={mustSelectProblem}
+				onClose={() => setMustSelectProblem(false)}
+				variant="soft"
+			>
+				At least one problem type must be selected.
+			</Snackbar>
+			<TransitionDialog
+				open={settingsOpen}
+				onClose={() => {
+					setTempPool(currentPool);
+					setSettingsOpen(false);
+				}}
+			>
+				<ModalClose />
+				<DialogTitle>
+					<SettingsIcon />
+					Right Hand Rule Settings
+				</DialogTitle>
+				<Divider />
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						setSettingsOpen(false);
+
+						router.push(
+							pathname + '?' + createQueryString('s', tempPool.join(',')),
+						);
+
+						genNewProblem(tempPool);
+					}}
+				>
+					<List
+						size="sm"
+						sx={{
+							[`& .${checkboxClasses.root}`]: {
+								alignItems: 'center',
+							},
+						}}
+					>
+						{problemTypes.map(({ id, name, description }) => (
+							<ListItem key={id}>
+								<Checkbox
+									overlay
+									variant="soft"
+									checked={tempPool.includes(id)}
+									onChange={(e) => {
+										if (e.target.checked) {
+											setTempPool([...tempPool, id]);
+										} else if (tempPool.length === 1) {
+											setMustSelectProblem(true);
+										} else {
+											setTempPool(tempPool.filter((a) => a !== id));
+										}
+									}}
+									label={
+										<>
+											<Typography level="body-md">
+												{name}{' '}
+												<Typography sx={{ color: 'grey' }}>({id})</Typography>
+											</Typography>
+											<Typography level="body-xs" sx={{ display: 'block' }}>
+												{description}
+											</Typography>
+										</>
+									}
+								/>
+							</ListItem>
+						))}
+					</List>
+					<DialogActions>
+						<Button type="submit" variant="soft">
+							Done
+						</Button>
+					</DialogActions>
+				</form>
+			</TransitionDialog>
+		</>
 	);
 }
