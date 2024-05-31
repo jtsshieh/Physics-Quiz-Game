@@ -36,6 +36,7 @@ export default function RightHandRule() {
 
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [helpOpen, setHelpOpen] = useState(false);
+
 	const [problemPool, setProblemPool] = useState(
 		problemTypes.map(({ id }) => id),
 	);
@@ -55,7 +56,9 @@ export default function RightHandRule() {
 		const fullPool = problemTypes.map(({ id }) => id);
 
 		if (!search) {
-			router.push(pathname + '?' + createQueryString('s', fullPool.join(',')));
+			router.replace(
+				pathname + '?' + createQueryString('s', fullPool.join(',')),
+			);
 			return;
 		}
 
@@ -64,13 +67,15 @@ export default function RightHandRule() {
 
 		// no results left -> populate default pool
 		if (filteredTypes.length === 0) {
-			router.push(pathname + '?' + createQueryString('s', fullPool.join(',')));
+			router.replace(
+				pathname + '?' + createQueryString('s', fullPool.join(',')),
+			);
 			return;
 		}
 
 		// filtered results -> update query string with filtered results
 		if (providedTypes.length !== filteredTypes.length) {
-			router.push(
+			router.replace(
 				pathname + '?' + createQueryString('s', filteredTypes.join(',')),
 			);
 			return;
@@ -95,7 +100,7 @@ export default function RightHandRule() {
 		setHasMounted(true);
 	}, []);
 
-	if (!hasMounted) {
+	if (!hasMounted || !search) {
 		return null;
 	}
 
@@ -129,7 +134,7 @@ export default function RightHandRule() {
 		<div
 			className={stack({
 				direction: 'row',
-				justifyContent: 'center',
+				justify: 'center',
 				w: '100vw',
 				h: '100vh',
 				p: '4',
@@ -178,7 +183,7 @@ export default function RightHandRule() {
 				<div
 					className={stack({
 						direction: 'row',
-						justifyContent: 'center',
+						justify: 'center',
 						width: '100%',
 					})}
 				>
@@ -228,7 +233,7 @@ export default function RightHandRule() {
 							direction: 'row',
 							gap: '2',
 							flexWrap: 'wrap',
-							justifyContent: 'center',
+							justify: 'center',
 						})}
 					>
 						{problemType
