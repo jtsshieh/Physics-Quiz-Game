@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { MathJax } from 'better-react-mathjax';
+import { Directions } from '../constants';
 
 export function IntoPage({ x, y }: { x: number; y: number }) {
 	return (
@@ -68,38 +69,38 @@ export default function VectorField({
 	x: number;
 	y: number;
 }) {
-	const vectorField: JSX.Element[] = [];
-	if (direction == 0) {
+	const vectorField: ReactElement[] = [];
+	if (direction == Directions.IntoPage) {
 		for (let x = 25; x < 200; x += 50) {
 			for (let y = 25; y < 200; y += 50) {
 				vectorField.push(<IntoPage x={x} y={y} key={`${x}${y}`} />);
 			}
 		}
-	} else if (direction == 1) {
+	} else if (direction == Directions.OutOfPage) {
 		for (let x = 25; x < 200; x += 50) {
 			for (let y = 25; y < 200; y += 50) {
 				vectorField.push(<OutOfPage x={x} y={y} key={`${x}${y}`} />);
 			}
 		}
-	} else if (direction == 2) {
+	} else if (direction == Directions.Left) {
 		for (let y = 25; y < 200; y += 50) {
 			vectorField.push(
 				<HorizontalArrow x1={175} x2={25} y={y} key={`${x}${y}`} />,
 			);
 		}
-	} else if (direction == 3) {
+	} else if (direction == Directions.Right) {
 		for (let y = 25; y < 200; y += 50) {
 			vectorField.push(
 				<HorizontalArrow x1={25} x2={175} y={y} key={`${x}${y}`} />,
 			);
 		}
-	} else if (direction == 4) {
+	} else if (direction == Directions.Up) {
 		for (let x = 25; x < 200; x += 50) {
 			vectorField.push(
 				<VerticalArrow y1={175} y2={25} x={x} key={`${x}${y}`} />,
 			);
 		}
-	} else if (direction == 5) {
+	} else if (direction == Directions.Down) {
 		for (let x = 25; x < 200; x += 50) {
 			vectorField.push(
 				<VerticalArrow y1={25} y2={175} x={x} key={`${x}${y}`} />,
