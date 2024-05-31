@@ -14,4 +14,5 @@ export interface RHRProblemType<GameState> {
 interface AnswerChoice {
 	element: ReactElement;
 	correct: boolean;
+	key: string;
 }

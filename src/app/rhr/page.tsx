@@ -1,6 +1,6 @@
 'use client';
 import { ResultModal } from '../../components/result-modal';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Button,
 	DialogTitle,
@@ -46,6 +46,15 @@ export default function RightHandRule<T>() {
 
 	const [mustSelectProblem, setMustSelectProblem] = useState(false);
 
+	const [hasMounted, setHasMounted] = useState(false);
+	useEffect(() => {
+		setHasMounted(true);
+	}, []);
+
+	if (!hasMounted) {
+		return null;
+	}
+
 	function createCheckAnswer(correct: boolean) {
 		if (correct) {
 			return () => {
@@ -61,10 +70,15 @@ export default function RightHandRule<T>() {
 	}
 
 	function genNewProblem() {
-		setProblemType(
-			problemTypes[Math.floor(Math.random() * problemPool.length)],
-		);
-		setGameState(problemType.resetState());
+		const problemTypeId =
+			problemPool[Math.floor(Math.random() * problemPool.length)];
+
+		const newProblemType = problemTypes.find(({ id }) => id === problemTypeId);
+
+		// @ts-expect-error: id is from problemPool, an array of ids, so it must exist
+		setProblemType(newProblemType);
+		// @ts-expect-error: id is from problemPool, an array of ids, so it must exist
+		setGameState(newProblemType.resetState());
 	}
 
 	return (
@@ -135,7 +149,7 @@ export default function RightHandRule<T>() {
 							}}
 						>
 							{problemTypes.map(({ id, name, description }) => (
-								<ListItem>
+								<ListItem key={id}>
 									<Checkbox
 										overlay
 										variant="soft"
@@ -214,10 +228,11 @@ export default function RightHandRule<T>() {
 					})}
 				>
 					<Typography level="body-lg">
-						<MathJax inline={true}>
-							<b>Directions</b>:{problemType.directions}
+						<MathJax dynamic inline hideUntilTypeset="first">
+							<b>Directions</b>: <span>{problemType.directions}</span>
 						</MathJax>
 					</Typography>
+					{/*//@ts-expect-error: game state is synced with problem type*/}
 					{problemType.renderDiagram(gameState)}
 				</div>
 
@@ -235,9 +250,11 @@ export default function RightHandRule<T>() {
 						})}
 					>
 						{problemType
+							// @ts-expect-error: game state is synced with problem type
 							.getAnswerChoices(gameState)
-							.map(({ element, correct }) => (
+							.map(({ element, correct, key }) => (
 								<Button
+									key={key}
 									variant="soft"
 									size="lg"
 									color="neutral"

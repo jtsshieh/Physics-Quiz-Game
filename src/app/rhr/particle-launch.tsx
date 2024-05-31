@@ -153,6 +153,7 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 		return Object.entries(ButtonArrows).map(([direction, component]) => ({
 			element: component,
 			correct: answerDirection == Number(direction),
+			key: direction,
 		}));
 	}
 }

@@ -72,30 +72,38 @@ export default function VectorField({
 	if (direction == 0) {
 		for (let x = 25; x < 200; x += 50) {
 			for (let y = 25; y < 200; y += 50) {
-				vectorField.push(<IntoPage x={x} y={y} />);
+				vectorField.push(<IntoPage x={x} y={y} key={`${x}${y}`} />);
 			}
 		}
 	} else if (direction == 1) {
 		for (let x = 25; x < 200; x += 50) {
 			for (let y = 25; y < 200; y += 50) {
-				vectorField.push(<OutOfPage x={x} y={y} />);
+				vectorField.push(<OutOfPage x={x} y={y} key={`${x}${y}`} />);
 			}
 		}
 	} else if (direction == 2) {
 		for (let y = 25; y < 200; y += 50) {
-			vectorField.push(<HorizontalArrow x1={175} x2={25} y={y} />);
+			vectorField.push(
+				<HorizontalArrow x1={175} x2={25} y={y} key={`${x}${y}`} />,
+			);
 		}
 	} else if (direction == 3) {
 		for (let y = 25; y < 200; y += 50) {
-			vectorField.push(<HorizontalArrow x1={25} x2={175} y={y} />);
+			vectorField.push(
+				<HorizontalArrow x1={25} x2={175} y={y} key={`${x}${y}`} />,
+			);
 		}
 	} else if (direction == 4) {
 		for (let x = 25; x < 200; x += 50) {
-			vectorField.push(<VerticalArrow y1={175} y2={25} x={x} />);
+			vectorField.push(
+				<VerticalArrow y1={175} y2={25} x={x} key={`${x}${y}`} />,
+			);
 		}
 	} else if (direction == 5) {
 		for (let x = 25; x < 200; x += 50) {
-			vectorField.push(<VerticalArrow y1={25} y2={175} x={x} />);
+			vectorField.push(
+				<VerticalArrow y1={25} y2={175} x={x} key={`${x}${y}`} />,
+			);
 		}
 	}
 	return (
