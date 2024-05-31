@@ -6,6 +6,23 @@ import NextAppDirEmotionCacheProvider from './emotion-cache';
 import { extendTheme } from '@mui/joy';
 
 const theme = extendTheme({
+	components: {
+		JoyButton: {
+			styleOverrides: {
+				root: ({ theme }) => ({
+					'--Button-radius': theme.vars.radius.lg,
+				}),
+			},
+		},
+		JoyCheckbox: {
+			styleOverrides: {
+				checkbox: ({ theme }) => ({
+					borderRadius: theme.vars.radius.sm,
+				}),
+			},
+		},
+	},
+
 	colorSchemes: {
 		light: {
 			palette: {
