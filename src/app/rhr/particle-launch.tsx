@@ -16,7 +16,7 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 	id = 'particle-launch';
 	name = 'Particle Launch';
 	description =
-		'Determine the direction of a particle launched into a magnetic field';
+		'Determine the direction of magnetic force of a particle launched into a magnetic field.';
 	directions =
 		'A particle is being launched with velocity \\(v\\) towards a ' +
 		'magnetic field labeled \\(\\mathbf{\\vec{B}}\\). Select the ' +

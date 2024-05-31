@@ -4,7 +4,7 @@ import React from 'react';
 import { ButtonArrows } from './common';
 import { Directions, DirectionVectors } from '../../constants';
 import { MathJax } from 'better-react-mathjax';
-import { crossProduct, flip, vecEq } from '../../utils';
+import { crossProduct, vecEq } from '../../utils';
 import { IntoPage, OutOfPage } from '../../components/vector-field';
 
 interface WireFieldState {
@@ -19,7 +19,7 @@ export class WireField implements RHRProblemType<WireFieldState> {
 	id = 'wire-field';
 	name = 'Wire Field';
 	description =
-		'Find the magnetic field at various points around a charged wire.';
+		'Determine the direction of the magnetic field at various points around a current carrying wire.';
 	directions =
 		'The wire or wire cross section below is carrying a current \\(I\\) in ' +
 		'the specified direction. Select the direction of the magnetic field ' +
@@ -71,7 +71,7 @@ export class WireField implements RHRProblemType<WireFieldState> {
 		};
 	}
 
-	renderDiagram({ currentDirection, radiusDirection, px, py }) {
+	renderDiagram({ currentDirection, px, py }) {
 		const isVertical =
 			currentDirection === Directions.Up ||
 			currentDirection === Directions.Down;
