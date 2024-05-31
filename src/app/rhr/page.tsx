@@ -1,38 +1,70 @@
 'use client';
-
 import { ResultModal } from '../../components/result-modal';
-import React, { ReactElement, useState } from 'react';
-import { Button, IconButton, Typography } from '@mui/joy';
-import { Directions, DirectionVectors } from '../../constants';
+import React, { useState } from 'react';
+import {
+	Button,
+	DialogTitle,
+	IconButton,
+	Typography,
+	List,
+	ListItem,
+	Checkbox,
+	checkboxClasses,
+	DialogContent,
+	Divider,
+	DialogActions,
+	ModalClose,
+	Snackbar,
+} from '@mui/joy';
 import { MathJax } from 'better-react-mathjax';
-import { crossProduct, flip, vecEq } from '../../utils';
 import Link from 'next/link';
-import { css, cx } from '../../../styled-system/css';
+import { css } from '../../../styled-system/css';
 import { stack } from '../../../styled-system/patterns';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Settings } from '@mui/icons-material';
 import { ParticleLaunch } from './particle-launch';
+import HelpIcon from '@mui/icons-material/Help';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { TransitionDialog } from '../../components/transition-dialog';
+import { RHRProblemType } from './interfaces';
 
 const problemTypes = [new ParticleLaunch()];
 
-export default function RightHandRule() {
-	const [modalOpen, setModalOpen] = useState(false);
+export default function RightHandRule<T>() {
+	const [checkerOpen, setCheckerOpen] = useState(false);
 	const [correctState, setCorrectState] = useState(false);
-	const [problem, setProblem] = useState(problemTypes[0]);
-	const [gameState, setGameState] = useState(problem.resetState());
+
+	const [settingsOpen, setSettingsOpen] = useState(false);
+	const [helpOpen, setHelpOpen] = useState(false);
+	const [problemPool, setProblemPool] = useState(
+		problemTypes.map(({ id }) => id),
+	);
+
+	const [problemType, setProblemType] = useState(
+		problemTypes[Math.floor(Math.random() * problemPool.length)],
+	);
+	const [gameState, setGameState] = useState(problemType.resetState());
+
+	const [mustSelectProblem, setMustSelectProblem] = useState(false);
 
 	function createCheckAnswer(correct: boolean) {
 		if (correct) {
 			return () => {
 				setCorrectState(true);
-				setModalOpen(true);
+				setCheckerOpen(true);
 			};
 		} else {
 			return () => {
 				setCorrectState(false);
-				setModalOpen(true);
+				setCheckerOpen(true);
 			};
 		}
+	}
+
+	function genNewProblem() {
+		setProblemType(
+			problemTypes[Math.floor(Math.random() * problemPool.length)],
+		);
+		setGameState(problemType.resetState());
 	}
 
 	return (
@@ -53,14 +85,98 @@ export default function RightHandRule() {
 					flex: 'auto',
 				})}
 			>
+				<Snackbar
+					autoHideDuration={5000}
+					anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+					open={mustSelectProblem}
+					onClose={() => setMustSelectProblem(false)}
+					variant="soft"
+				>
+					At least one problem type must be selected.
+				</Snackbar>
+				<TransitionDialog open={helpOpen} setOpen={setHelpOpen}>
+					<ModalClose />
+					<DialogTitle>
+						<HelpIcon /> Problem Information
+					</DialogTitle>
+					<Divider />
+					<DialogContent>
+						<Typography level="body-md">
+							<b>Name</b>: {problemType.name}
+						</Typography>
+						<Typography level="body-md">
+							<b>ID</b>: {problemType.id}
+						</Typography>
+						<Typography level="body-md">
+							<b>Description</b>: {problemType.description}
+						</Typography>
+					</DialogContent>
+				</TransitionDialog>
+				<TransitionDialog open={settingsOpen} setOpen={setSettingsOpen}>
+					<ModalClose />
+					<DialogTitle>
+						<SettingsIcon />
+						Right Hand Rule Settings
+					</DialogTitle>
+					<Divider />
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							genNewProblem();
+							setSettingsOpen(false);
+						}}
+					>
+						<List
+							size="sm"
+							sx={{
+								[`& .${checkboxClasses.root}`]: {
+									alignItems: 'center',
+								},
+							}}
+						>
+							{problemTypes.map(({ id, name, description }) => (
+								<ListItem>
+									<Checkbox
+										overlay
+										variant="soft"
+										checked={problemPool.includes(id)}
+										onChange={(e) => {
+											if (e.target.checked) {
+												setProblemPool((val) => [...val, id]);
+											} else if (problemPool.length === 1) {
+												setMustSelectProblem(true);
+											} else {
+												setProblemPool((val) => val.filter((a) => a !== id));
+											}
+										}}
+										label={
+											<>
+												<Typography level="body-md">
+													{name}{' '}
+													<Typography sx={{ color: 'grey' }}>({id})</Typography>
+												</Typography>
+												<Typography level="body-xs" sx={{ display: 'block' }}>
+													{description}
+												</Typography>
+											</>
+										}
+									/>
+								</ListItem>
+							))}
+						</List>
+						<DialogActions>
+							<Button type="submit" variant="soft">
+								Done
+							</Button>
+						</DialogActions>
+					</form>
+				</TransitionDialog>
 				<ResultModal
-					open={modalOpen}
+					open={checkerOpen}
 					correct={correctState}
 					setClose={() => {
-						setModalOpen(false);
-						if (correctState) {
-							setGameState(problem.resetState());
-						}
+						setCheckerOpen(false);
+						if (correctState) genNewProblem();
 					}}
 				/>
 				<div
@@ -79,9 +195,14 @@ export default function RightHandRule() {
 					>
 						Right Hand Rule
 					</Typography>
-					<IconButton component={Link} href="/" variant="soft">
-						<Settings />
-					</IconButton>
+					<div className={stack({ direction: 'row', gap: '2' })}>
+						<IconButton onClick={() => setSettingsOpen(true)} variant="soft">
+							<SettingsIcon />
+						</IconButton>
+						<IconButton onClick={() => setHelpOpen(true)} variant="soft">
+							<HelpIcon />
+						</IconButton>
+					</div>
 				</div>
 				<div
 					className={stack({
@@ -94,10 +215,10 @@ export default function RightHandRule() {
 				>
 					<Typography level="body-lg">
 						<MathJax inline={true}>
-							<b>Directions</b>:{problem.directions}
+							<b>Directions</b>:{problemType.directions}
 						</MathJax>
 					</Typography>
-					{problem.renderDiagram(gameState)}
+					{problemType.renderDiagram(gameState)}
 				</div>
 
 				<div
@@ -113,16 +234,18 @@ export default function RightHandRule() {
 							justifyContent: 'center',
 						})}
 					>
-						{problem.getAnswerChoices(gameState).map(({ element, correct }) => (
-							<Button
-								variant="soft"
-								size="lg"
-								color="neutral"
-								onClick={createCheckAnswer(correct)}
-							>
-								{element}
-							</Button>
-						))}
+						{problemType
+							.getAnswerChoices(gameState)
+							.map(({ element, correct }) => (
+								<Button
+									variant="soft"
+									size="lg"
+									color="neutral"
+									onClick={createCheckAnswer(correct)}
+								>
+									{element}
+								</Button>
+							))}
 					</div>
 				</div>
 			</div>

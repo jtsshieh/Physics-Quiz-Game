@@ -15,7 +15,8 @@
 		"@mui/icons-material": "^5.15.18",
 		"@mui/joy": "^5.0.0-alpha.79",
 		"better-react-mathjax": "^2.0.3",
-		"next": "^14.2.3"
+		"next": "^14.2.3",
+		"react-transition-group": "^4.4.5"
 	},
 	"devDependencies": {
 		"@pandacss/dev": "^0.40.0",
