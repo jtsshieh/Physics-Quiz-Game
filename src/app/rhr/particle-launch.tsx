@@ -146,13 +146,14 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 
 		const answer = crossProduct(velocity, fieldVector);
 
-		const answerDirection = Object.entries(DirectionVectors).findIndex(
+		const [answerDirection] = Object.entries(DirectionVectors).find(
 			([, vector]) => vecEq(answer, vector),
-		);
+		) ?? [Directions.None.toString(), [0, 0, 0]];
+
 
 		return Object.entries(ButtonArrows).map(([direction, component]) => ({
 			element: component,
-			correct: answerDirection == Number(direction),
+			correct: Number(answerDirection) === Number(direction),
 			key: direction,
 		}));
 	}

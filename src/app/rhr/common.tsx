@@ -24,13 +24,13 @@ export const ButtonArrows = {
 
 	[Directions.Left]: (
 		<svg width="50" height="50">
-			<HorizontalArrow x1={0} x2={45} y={25} />
+			<HorizontalArrow x1={50} x2={5} y={25} />
 		</svg>
 	),
 
 	[Directions.Right]: (
 		<svg width="50" height="50">
-			<HorizontalArrow x1={50} x2={5} y={25} />
+			<HorizontalArrow x1={0} x2={45} y={25} />
 		</svg>
 	),
 
