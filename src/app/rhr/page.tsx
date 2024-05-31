@@ -215,7 +215,7 @@ export default function RightHandRule() {
 					})}
 				>
 					<Typography level="body-lg">
-						<MathJax dynamic inline hideUntilTypeset="first">
+						<MathJax dynamic inline>
 							<b>Directions</b>: <span>{problemType.directions}</span>
 						</MathJax>
 					</Typography>

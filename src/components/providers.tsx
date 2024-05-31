@@ -6,7 +6,7 @@ import ThemeRegistry from './theme-registry';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
 	return (
-		<MathJaxContext>
+		<MathJaxContext hideUntilTypeset="first">
 			<ThemeRegistry>{children}</ThemeRegistry>
 		</MathJaxContext>
 	);
