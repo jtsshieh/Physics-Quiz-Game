@@ -4,6 +4,11 @@ import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import NextAppDirEmotionCacheProvider from './emotion-cache';
 import { extendTheme } from '@mui/joy';
+import { Inter } from 'next/font/google';
+const inter = Inter({
+	subsets: ['latin'],
+	display: 'swap',
+});
 
 const theme = extendTheme({
 	components: {
@@ -21,6 +26,11 @@ const theme = extendTheme({
 				}),
 			},
 		},
+	},
+
+	fontFamily: {
+		display: inter.style.fontFamily,
+		body: inter.style.fontFamily,
 	},
 
 	colorSchemes: {
