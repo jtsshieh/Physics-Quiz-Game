@@ -150,7 +150,6 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 			([, vector]) => vecEq(answer, vector),
 		) ?? [Directions.None.toString(), [0, 0, 0]];
 
-
 		return Object.entries(ButtonArrows).map(([direction, component]) => ({
 			element: component,
 			correct: Number(answerDirection) === Number(direction),

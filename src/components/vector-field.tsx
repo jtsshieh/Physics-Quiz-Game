@@ -2,18 +2,20 @@ import React, { ReactElement } from 'react';
 import { MathJax } from 'better-react-mathjax';
 import { Directions } from '../constants';
 
-export function IntoPage({ x, y }: { x: number; y: number }) {
+export function IntoPage({ x, y, r }: { x: number; y: number; r?: number }) {
+	const radius = r ?? 5;
+
 	return (
 		<polyline
-			points={`${x}, ${y}, ${x - 5}, ${y - 5}, ${x + 5}, ${y + 5}, ${x}, ${y}, ${x + 5}, ${y - 5}, ${x}, ${y}, ${x - 5}, ${y + 5}`}
+			points={`${x}, ${y}, ${x - radius}, ${y - radius}, ${x + radius}, ${y + radius}, ${x}, ${y}, ${x + radius}, ${y - radius}, ${x}, ${y}, ${x - radius}, ${y + radius}`}
 			stroke="black"
 			strokeLinecap="square"
 		/>
 	);
 }
 
-export function OutOfPage({ x, y }: { x: number; y: number }) {
-	return <circle r="5" cx={x} cy={y} stroke="black" />;
+export function OutOfPage({ x, y, r }: { x: number; y: number; r?: number }) {
+	return <circle r={r ?? 5} cx={x} cy={y} stroke="black" />;
 }
 
 export function HorizontalArrow({

@@ -25,12 +25,12 @@ import { ParticleLaunch } from './particle-launch';
 import HelpIcon from '@mui/icons-material/Help';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { TransitionDialog } from '../../components/transition-dialog';
-import { RHRProblemType } from './interfaces';
+import { WireField } from './wire-field';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
-const problemTypes = [new ParticleLaunch()];
+const problemTypes = [new ParticleLaunch(), new WireField()];
 
-export default function RightHandRule<T>() {
+export default function RightHandRule() {
 	const [checkerOpen, setCheckerOpen] = useState(false);
 	const [correctState, setCorrectState] = useState(false);
 
@@ -77,6 +77,7 @@ export default function RightHandRule<T>() {
 		}
 
 		setProblemPool(filteredTypes);
+		genNewProblem(filteredTypes);
 	}, [search]);
 
 	const createQueryString = useCallback(
