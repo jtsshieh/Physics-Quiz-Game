@@ -42,7 +42,7 @@ export class WireField implements RHRProblemType<WireFieldState> {
 				Object.values(Directions)[Math.floor(Math.random() * 4) + 2];
 			const radiusVector = DirectionVectors[radiusDirection];
 			px = 100 + radiusVector[0] * 60;
-			py = 100 + radiusVector[1] * -50;
+			py = 100 + radiusVector[1] * -60;
 		} else if (
 			currentDirection === Directions.Left ||
 			currentDirection === Directions.Right
