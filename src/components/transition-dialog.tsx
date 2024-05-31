@@ -24,10 +24,10 @@ export function TransitionDialog({
 							sx: {
 								opacity: 0,
 								backdropFilter: 'none',
-								transition: `opacity 400ms, backdrop-filter 400ms`,
+								transition: `opacity 400ms`,
 								...{
-									entering: { opacity: 1, backdropFilter: 'blur(8px)' },
-									entered: { opacity: 1, backdropFilter: 'blur(8px)' },
+									entering: { opacity: 1 },
+									entered: { opacity: 1 },
 								}[state],
 							},
 						},
