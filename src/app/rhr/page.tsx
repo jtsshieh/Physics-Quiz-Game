@@ -50,6 +50,7 @@ export default function RightHandRule() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
+	const theme = useTheme();
 
 	const search = searchParams.get('s');
 
@@ -237,7 +238,14 @@ export default function RightHandRule() {
 								minHeight: 0,
 							})}
 						>
-							<Typography level="body-lg">
+							<Typography
+								level="body-md"
+								sx={{
+									[theme.breakpoints.up('sm')]: {
+										fontSize: theme.typography['body-lg'],
+									},
+								}}
+							>
 								<MathJax dynamic inline>
 									<b>Directions</b>: <span>{problemType.directions}</span>
 								</MathJax>
@@ -257,11 +265,7 @@ export default function RightHandRule() {
 								// @ts-expect-error: game state is synced with problem type
 								.getAnswerChoices(gameState)
 								.map(({ element, correct, key }) => (
-									<Button
-										key={key}
-										size="lg"
-										onClick={createCheckAnswer(correct)}
-									>
+									<Button key={key} onClick={createCheckAnswer(correct)}>
 										{element}
 									</Button>
 								))}
@@ -376,7 +380,7 @@ function SettingsMenu({
 					))}
 				</List>
 				<DialogActions>
-					<Button type="submit" variant="solid" size="lg">
+					<Button type="submit" variant="solid">
 						Done
 					</Button>
 					<Button
@@ -385,7 +389,6 @@ function SettingsMenu({
 							setSettingsOpen(false);
 						}}
 						variant="outlined"
-						size="lg"
 					>
 						Cancel
 					</Button>

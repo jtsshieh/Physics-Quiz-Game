@@ -14,6 +14,7 @@ const theme = extendTheme({
 	components: {
 		JoyButton: {
 			defaultProps: {
+				size: 'md',
 				variant: 'outlined',
 				color: 'neutral',
 			},
@@ -21,6 +22,15 @@ const theme = extendTheme({
 				root: ({ theme }) => ({
 					'--Button-radius': theme.vars.radius.lg,
 					transition: 'background-color 150ms ease-in-out',
+
+					[theme.breakpoints.up('sm')]: {
+						// large styles for large screen sizes
+						'--Button-gap': '0.75rem',
+						minHeight: 'var(--Button-minHeight, 2.75rem)',
+						fontSize: theme.vars.fontSize.md,
+						paddingBlock: 'var(--Button-paddingBlock, 0.5rem)',
+						paddingInline: '1.5rem',
+					},
 				}),
 			},
 		},
