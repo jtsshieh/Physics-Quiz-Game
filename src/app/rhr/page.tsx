@@ -15,6 +15,7 @@ import {
 	DialogActions,
 	ModalClose,
 	Snackbar,
+	useTheme,
 } from '@mui/joy';
 import { MathJax } from 'better-react-mathjax';
 import Link from 'next/link';
@@ -49,6 +50,7 @@ export default function RightHandRule() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
+	const theme = useTheme();
 
 	const search = searchParams.get('s');
 
@@ -137,15 +139,14 @@ export default function RightHandRule() {
 				justify: 'center',
 				w: '100vw',
 				h: '100vh',
-				p: '4',
 			})}
 		>
 			<div
 				className={stack({
 					direction: 'column',
 					alignItems: 'center',
-					maxWidth: '750px',
 					flex: 'auto',
+					gap: 0,
 				})}
 			>
 				<SettingsMenu
@@ -184,72 +185,88 @@ export default function RightHandRule() {
 					className={stack({
 						direction: 'row',
 						justify: 'center',
+						align: 'center',
 						width: '100%',
+						p: 4,
 					})}
 				>
-					<IconButton component={Link} href="/" variant="soft">
+					<IconButton component={Link} href="/">
 						<ArrowBackIcon />
 					</IconButton>
 					<Typography
-						level="h3"
+						level="h4"
 						className={css({ flex: '1', textAlign: 'center' })}
 					>
 						Right Hand Rule
 					</Typography>
 					<div className={stack({ direction: 'row', gap: '2' })}>
-						<IconButton onClick={() => setSettingsOpen(true)} variant="soft">
+						<IconButton onClick={() => setSettingsOpen(true)}>
 							<SettingsIcon />
 						</IconButton>
-						<IconButton onClick={() => setHelpOpen(true)} variant="soft">
+						<IconButton onClick={() => setHelpOpen(true)}>
 							<HelpIcon />
 						</IconButton>
 					</div>
 				</div>
+				<Divider />
 				<div
 					className={stack({
 						direction: 'column',
-						gap: '4',
-						alignItems: 'center',
+						align: 'center',
+						backgroundColor: 'var(--joy-palette-background-surface)',
+						w: '100%',
 						flex: 'auto',
+						p: 4,
 						minHeight: 0,
-					})}
-				>
-					<Typography level="body-lg">
-						<MathJax dynamic inline>
-							<b>Directions</b>: <span>{problemType.directions}</span>
-						</MathJax>
-					</Typography>
-					{/*//@ts-expect-error: game state is synced with problem type*/}
-					{problemType.renderDiagram(gameState)}
-				</div>
-
-				<div
-					className={stack({
-						direction: 'column',
 					})}
 				>
 					<div
 						className={stack({
-							direction: 'row',
-							gap: '2',
-							flexWrap: 'wrap',
-							justify: 'center',
+							direction: 'column',
+							alignItems: 'center',
+							maxWidth: '750px',
+							flex: 'auto',
+							minHeight: 0,
 						})}
 					>
-						{problemType
-							// @ts-expect-error: game state is synced with problem type
-							.getAnswerChoices(gameState)
-							.map(({ element, correct, key }) => (
-								<Button
-									key={key}
-									variant="soft"
-									size="lg"
-									color="neutral"
-									onClick={createCheckAnswer(correct)}
-								>
-									{element}
-								</Button>
-							))}
+						<div
+							className={stack({
+								direction: 'column',
+								gap: '4',
+								alignItems: 'center',
+								flex: 'auto',
+								minHeight: 0,
+							})}
+						>
+							<Typography level="body-lg">
+								<MathJax dynamic inline>
+									<b>Directions</b>: <span>{problemType.directions}</span>
+								</MathJax>
+							</Typography>
+							{/*//@ts-expect-error: game state is synced with problem type*/}
+							{problemType.renderDiagram(gameState)}
+						</div>
+						<div
+							className={stack({
+								direction: 'row',
+								gap: '2',
+								flexWrap: 'wrap',
+								justify: 'center',
+							})}
+						>
+							{problemType
+								// @ts-expect-error: game state is synced with problem type
+								.getAnswerChoices(gameState)
+								.map(({ element, correct, key }) => (
+									<Button
+										key={key}
+										size="lg"
+										onClick={createCheckAnswer(correct)}
+									>
+										{element}
+									</Button>
+								))}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -304,69 +321,76 @@ function SettingsMenu({
 					setTempPool(currentPool);
 					setSettingsOpen(false);
 				}}
+				component="form"
+				onSubmit={(e) => {
+					e.preventDefault();
+					setSettingsOpen(false);
+
+					router.push(
+						pathname + '?' + createQueryString('s', tempPool.join(',')),
+					);
+
+					genNewProblem(tempPool);
+				}}
 			>
-				<ModalClose />
 				<DialogTitle>
 					<SettingsIcon />
 					Right Hand Rule Settings
 				</DialogTitle>
 				<Divider />
-				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-						setSettingsOpen(false);
-
-						router.push(
-							pathname + '?' + createQueryString('s', tempPool.join(',')),
-						);
-
-						genNewProblem(tempPool);
+				<List
+					size="sm"
+					sx={{
+						[`& .${checkboxClasses.root}`]: {
+							alignItems: 'center',
+						},
 					}}
 				>
-					<List
-						size="sm"
-						sx={{
-							[`& .${checkboxClasses.root}`]: {
-								alignItems: 'center',
-							},
-						}}
-					>
-						{problemTypes.map(({ id, name, description }) => (
-							<ListItem key={id}>
-								<Checkbox
-									overlay
-									variant="soft"
-									checked={tempPool.includes(id)}
-									onChange={(e) => {
-										if (e.target.checked) {
-											setTempPool([...tempPool, id]);
-										} else if (tempPool.length === 1) {
-											setMustSelectProblem(true);
-										} else {
-											setTempPool(tempPool.filter((a) => a !== id));
-										}
-									}}
-									label={
-										<>
-											<Typography level="body-md">
-												{name}{' '}
-												<Typography sx={{ color: 'grey' }}>({id})</Typography>
-											</Typography>
-											<Typography level="body-xs" sx={{ display: 'block' }}>
-												{description}
-											</Typography>
-										</>
+					{problemTypes.map(({ id, name, description }) => (
+						<ListItem key={id}>
+							<Checkbox
+								overlay
+								variant="soft"
+								checked={tempPool.includes(id)}
+								onChange={(e) => {
+									if (e.target.checked) {
+										setTempPool([...tempPool, id]);
+									} else if (tempPool.length === 1) {
+										setMustSelectProblem(true);
+									} else {
+										setTempPool(tempPool.filter((a) => a !== id));
 									}
-								/>
-							</ListItem>
-						))}
-					</List>
-					<DialogActions>
-						<Button type="submit" variant="soft">
-							Done
-						</Button>
-					</DialogActions>
-				</form>
+								}}
+								label={
+									<>
+										<Typography level="body-md">
+											{name}{' '}
+											<Typography sx={{ color: 'grey' }}>({id})</Typography>
+										</Typography>
+										<Typography level="body-xs" sx={{ display: 'block' }}>
+											{description}
+										</Typography>
+									</>
+								}
+							/>
+						</ListItem>
+					))}
+				</List>
+				<DialogActions>
+					<Button type="submit" variant="solid" size="lg">
+						Done
+					</Button>
+					<Button
+						onClick={() => {
+							setTempPool(currentPool);
+							setSettingsOpen(false);
+						}}
+						variant="outlined"
+						size="lg"
+					>
+						Cancel
+					</Button>
+				</DialogActions>
 			</TransitionDialog>
 		</>
 	);

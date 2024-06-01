@@ -1,17 +1,18 @@
 import { ReactNode } from 'react';
 import { Transition } from 'react-transition-group';
 import Modal from '@mui/joy/Modal';
-import { ModalDialog } from '@mui/joy';
+import { ModalDialog, ModalDialogProps } from '@mui/joy';
 
 export function TransitionDialog({
 	open,
 	onClose,
 	children,
+	...props
 }: {
 	open: boolean;
 	onClose: () => void;
 	children: ReactNode;
-}) {
+} & ModalDialogProps) {
 	return (
 		<Transition in={open} timeout={400}>
 			{(state: string) => (
@@ -53,6 +54,7 @@ export function TransitionDialog({
 								},
 							}[state],
 						}}
+						{...props}
 					>
 						{children}
 					</ModalDialog>

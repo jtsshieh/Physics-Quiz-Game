@@ -13,16 +13,35 @@ const inter = Inter({
 const theme = extendTheme({
 	components: {
 		JoyButton: {
+			defaultProps: {
+				variant: 'outlined',
+				color: 'neutral',
+			},
 			styleOverrides: {
 				root: ({ theme }) => ({
 					'--Button-radius': theme.vars.radius.lg,
+					transition: 'background-color 150ms ease-in-out',
+				}),
+			},
+		},
+		JoyIconButton: {
+			defaultProps: {
+				variant: 'plain',
+			},
+			styleOverrides: {
+				root: ({ theme }) => ({
+					transition: 'background-color 150ms ease-in-out',
 				}),
 			},
 		},
 		JoyCheckbox: {
+			defaultProps: {
+				color: 'neutral',
+			},
 			styleOverrides: {
 				checkbox: ({ theme }) => ({
 					borderRadius: theme.vars.radius.sm,
+					transition: 'background-color 150ms ease-in-out',
 				}),
 			},
 		},
@@ -36,6 +55,10 @@ const theme = extendTheme({
 	colorSchemes: {
 		light: {
 			palette: {
+				neutral: {
+					outlinedBg: 'var(--joy-palette-common-white)',
+					outlinedHoverBg: 'var(--joy-palette-neutral-100)',
+				},
 				background: {
 					backdrop:
 						'rgba(var(--joy-palette-neutral-darkChannel, 11 13 14) / 0.5)',
