@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import { Transition } from 'react-transition-group';
 import Modal from '@mui/joy/Modal';
 import { ModalDialog, ModalDialogProps } from '@mui/joy';
@@ -13,11 +13,14 @@ export function TransitionDialog({
 	onClose: () => void;
 	children: ReactNode;
 } & ModalDialogProps) {
+	const nodeRef = useRef(null);
+
 	return (
-		<Transition in={open} timeout={400}>
+		<Transition nodeRef={nodeRef} in={open} timeout={400}>
 			{(state: string) => (
 				<Modal
 					keepMounted
+					ref={nodeRef}
 					open={!['exited', 'exiting'].includes(state)}
 					onClose={onClose}
 					slotProps={{
