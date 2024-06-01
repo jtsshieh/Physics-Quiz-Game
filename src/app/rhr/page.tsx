@@ -1,5 +1,5 @@
 'use client';
-import { ResultModal } from '../../components/result-modal';
+import { ResultSnackbar } from '../../components/result-snackbar';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
 	Button,
@@ -173,7 +173,7 @@ export default function RightHandRule() {
 						</Typography>
 					</DialogContent>
 				</TransitionDialog>
-				<ResultModal
+				<ResultSnackbar
 					open={checkerOpen}
 					correct={correctState}
 					setClose={() => {
@@ -265,7 +265,11 @@ export default function RightHandRule() {
 								// @ts-expect-error: game state is synced with problem type
 								.getAnswerChoices(gameState)
 								.map(({ element, correct, key }) => (
-									<Button key={key} onClick={createCheckAnswer(correct)}>
+									<Button
+										disabled={checkerOpen}
+										key={key}
+										onClick={createCheckAnswer(correct)}
+									>
 										{element}
 									</Button>
 								))}
