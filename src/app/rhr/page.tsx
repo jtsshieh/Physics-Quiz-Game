@@ -50,7 +50,6 @@ export default function RightHandRule() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
-	const theme = useTheme();
 
 	const search = searchParams.get('s');
 
@@ -138,7 +137,7 @@ export default function RightHandRule() {
 				direction: 'row',
 				justify: 'center',
 				w: '100vw',
-				h: '100vh',
+				h: '100dvh',
 			})}
 		>
 			<div
@@ -213,7 +212,7 @@ export default function RightHandRule() {
 					className={stack({
 						direction: 'column',
 						align: 'center',
-						backgroundColor: 'var(--joy-palette-background-surface)',
+						backgroundColor: 'var(--joy-palette-background-level1)',
 						w: '100%',
 						flex: 'auto',
 						p: 4,
