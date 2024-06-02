@@ -1,5 +1,8 @@
 'use client';
-import { hstack, stack } from '../../../../styled-system/patterns';
+import { css } from '@/styled-system/css';
+import { hstack, stack } from '@/styled-system/patterns';
+import { Directions } from '@/utils/direction-constants';
+import { DownloadRounded } from '@mui/icons-material';
 import {
 	Divider,
 	FormControl,
@@ -10,18 +13,14 @@ import {
 	RadioGroup,
 	Typography,
 } from '@mui/joy';
-import { ButtonArrows, NegativeCharge, PositiveCharge } from '../../rhr/common';
-import { Directions } from '../../../constants';
-import { css } from '../../../../styled-system/css';
-import React, { useRef, useState } from 'react';
-import { ParticleLaunch } from '../../rhr/particle-launch';
-import { DownloadRounded } from '@mui/icons-material';
 import dynamic from 'next/dynamic';
+import { useRef, useState } from 'react';
+import { ButtonArrows, NegativeCharge, PositiveCharge } from '../../rhr/common';
+import { ParticleLaunch } from '../../rhr/particle-launch';
 
-const DownloadDialog = dynamic(
-	() => import('../../../components/download-dialog'),
-	{ ssr: false },
-);
+const DownloadDialog = dynamic(() => import('@/components/download-dialog'), {
+	ssr: false,
+});
 
 const particleLaunch = new ParticleLaunch();
 

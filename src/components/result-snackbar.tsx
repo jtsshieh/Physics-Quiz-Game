@@ -1,9 +1,7 @@
-import Modal from '@mui/joy/Modal';
-import Typography from '@mui/joy/Typography';
-import { css, cx } from '../../styled-system/css';
-import { stack } from '../../styled-system/patterns';
-import { Snackbar, useTheme } from '@mui/joy';
+import { css } from '@/styled-system/css';
+import { stack } from '@/styled-system/patterns';
 import { Cancel, CheckCircle } from '@mui/icons-material';
+import { Snackbar, Typography, useTheme } from '@mui/joy';
 
 export function ResultSnackbar({
 	correct,

@@ -1,10 +1,11 @@
 'use client';
-import * as React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
-import NextAppDirEmotionCacheProvider from './emotion-cache';
 import { extendTheme } from '@mui/joy';
+import CssBaseline from '@mui/joy/CssBaseline';
+import { CssVarsProvider } from '@mui/joy/styles';
 import { Inter } from 'next/font/google';
+import { ReactNode } from 'react';
+import NextAppDirEmotionCacheProvider from './emotion-cache';
+
 const inter = Inter({
 	subsets: ['latin'],
 	display: 'swap',
@@ -92,11 +93,7 @@ const theme = extendTheme({
 		},
 	},
 });
-export default function ThemeRegistry({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function ThemeRegistry({ children }: { children: ReactNode }) {
 	return (
 		<NextAppDirEmotionCacheProvider options={{ key: 'joy' }}>
 			<CssVarsProvider theme={theme} defaultMode="light">

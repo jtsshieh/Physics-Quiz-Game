@@ -1,6 +1,6 @@
-import React, { ReactElement } from 'react';
+import { Directions } from '@/utils/direction-constants';
 import { MathJax } from 'better-react-mathjax';
-import { Directions } from '../constants';
+import { ReactElement } from 'react';
 
 export function IntoPage({ x, y, r }: { x: number; y: number; r?: number }) {
 	const radius = r ?? 5;

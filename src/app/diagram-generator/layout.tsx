@@ -1,5 +1,6 @@
 'use client';
-import { grid, stack } from '../../../styled-system/patterns';
+import { grid, stack } from '@/styled-system/patterns';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
 	Divider,
 	IconButton,
@@ -10,9 +11,8 @@ import {
 	Typography,
 } from '@mui/joy';
 import Link from 'next/link';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
 
 const diagrams = ['particle-launch', 'wire-field'];
 
@@ -22,7 +22,6 @@ export default function DiagramGeneratorLayout({
 	children: ReactNode;
 }) {
 	const route = usePathname();
-	const router = useRouter();
 	const [hasMounted, setHasMounted] = useState(false);
 	useEffect(() => {
 		setHasMounted(true);

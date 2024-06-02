@@ -1,11 +1,10 @@
-import { RHRProblemType } from './interfaces';
-import React from 'react';
-import { Directions, DirectionVectors } from '../../constants';
-import { css, cx } from '../../../styled-system/css';
-import VectorField from '../../components/vector-field';
+import { css, cx } from '@/styled-system/css';
+import { Directions, DirectionVectors } from '@/utils/direction-constants';
+import { crossProduct, flip, vecEq } from '@/utils/vector-utils';
 import { MathJax } from 'better-react-mathjax';
+import VectorField from '../../components/vector-field';
 import { ButtonArrows, NegativeCharge, PositiveCharge } from './common';
-import { crossProduct, flip, vecEq } from '../../utils';
+import { RHRProblemType } from './interfaces';
 
 interface ParticleLaunchState {
 	vectorFieldDirection: number;

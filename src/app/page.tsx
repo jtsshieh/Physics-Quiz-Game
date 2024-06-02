@@ -1,6 +1,6 @@
+import { stack } from '@/styled-system/patterns';
 import { Button } from '@mui/joy';
 import Link from 'next/link';
-import { stack } from '../../styled-system/patterns';
 
 export default function Page() {
 	return (

@@ -1,7 +1,6 @@
+import { Modal, ModalDialog, ModalDialogProps } from '@mui/joy';
 import { ReactNode, useRef } from 'react';
 import { Transition } from 'react-transition-group';
-import Modal from '@mui/joy/Modal';
-import { ModalDialog, ModalDialogProps } from '@mui/joy';
 
 export function TransitionDialog({
 	open,

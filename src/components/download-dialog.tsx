@@ -1,4 +1,5 @@
-import { TransitionDialog } from './transition-dialog';
+import { css } from '@/styled-system/css';
+import { DownloadRounded } from '@mui/icons-material';
 import {
 	DialogContent,
 	DialogTitle,
@@ -7,9 +8,8 @@ import {
 	Typography,
 	useTheme,
 } from '@mui/joy';
-import { DownloadRounded } from '@mui/icons-material';
-import React, { ReactNode } from 'react';
-import { css } from 'styled-system/css';
+import { ReactNode } from 'react';
+import { TransitionDialog } from './transition-dialog';
 
 export default function DownloadDialog({
 	open,

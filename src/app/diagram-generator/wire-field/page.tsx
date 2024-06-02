@@ -1,7 +1,8 @@
 'use client';
-import React, { useRef, useState } from 'react';
-import { Directions } from '../../../constants';
-import { hstack, stack } from '../../../../styled-system/patterns';
+import { css } from '@/styled-system/css';
+import { hstack, stack } from '@/styled-system/patterns';
+import { Directions } from '@/utils/direction-constants';
+import { DownloadRounded } from '@mui/icons-material';
 import {
 	Divider,
 	FormControl,
@@ -14,16 +15,14 @@ import {
 	Slider,
 	Typography,
 } from '@mui/joy';
-import { ButtonArrows } from '../../rhr/common';
-import { css } from '../../../../styled-system/css';
-import { WireField } from '../../rhr/wire-field';
-import { DownloadRounded } from '@mui/icons-material';
 import dynamic from 'next/dynamic';
+import { useRef, useState } from 'react';
+import { ButtonArrows } from '../../rhr/common';
+import { WireField } from '../../rhr/wire-field';
 
-const DownloadDialog = dynamic(
-	() => import('../../../components/download-dialog'),
-	{ ssr: false },
-);
+const DownloadDialog = dynamic(() => import('@/components/download-dialog'), {
+	ssr: false,
+});
 
 const wireField = new WireField();
 
@@ -150,11 +149,7 @@ export default function WireFieldDiagramGenerator() {
 								}}
 								marks={[
 									{ label: 0, value: 0 },
-									{
-										label: xBound,
-
-										value: xBound,
-									},
+									{ label: xBound, value: xBound },
 								]}
 								max={xBound}
 							/>
@@ -185,11 +180,7 @@ export default function WireFieldDiagramGenerator() {
 								}}
 								marks={[
 									{ label: 0, value: 0 },
-									{
-										label: yBound,
-
-										value: yBound,
-									},
+									{ label: yBound, value: yBound },
 								]}
 								max={yBound}
 							/>

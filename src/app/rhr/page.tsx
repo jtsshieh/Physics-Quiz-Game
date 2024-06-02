@@ -1,33 +1,32 @@
 'use client';
-import { ResultSnackbar } from '../../components/result-snackbar';
-import React, { useCallback, useEffect, useState } from 'react';
+import { ResultSnackbar } from '@/components/result-snackbar';
+import { TransitionDialog } from '@/components/transition-dialog';
+import { stack } from '@/styled-system/patterns';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import HelpIcon from '@mui/icons-material/Help';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
 	Button,
-	DialogTitle,
-	IconButton,
-	Typography,
-	List,
-	ListItem,
 	Checkbox,
 	checkboxClasses,
-	DialogContent,
-	Divider,
 	DialogActions,
+	DialogContent,
+	DialogTitle,
+	Divider,
+	IconButton,
+	List,
+	ListItem,
 	ModalClose,
 	Snackbar,
+	Typography,
 	useTheme,
 } from '@mui/joy';
 import { MathJax } from 'better-react-mathjax';
 import Link from 'next/link';
-import { css } from '../../../styled-system/css';
-import { stack } from '../../../styled-system/patterns';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import { ParticleLaunch } from './particle-launch';
-import HelpIcon from '@mui/icons-material/Help';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { TransitionDialog } from '../../components/transition-dialog';
 import { WireField } from './wire-field';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 const problemTypes = [new ParticleLaunch(), new WireField()];
 
