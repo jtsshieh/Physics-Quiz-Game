@@ -15,9 +15,13 @@ import { Directions } from '../../../constants';
 import { css } from '../../../../styled-system/css';
 import React, { useRef, useState } from 'react';
 import { ParticleLaunch } from '../../rhr/particle-launch';
-import { TransitionDialog } from '../../../components/transition-dialog';
 import { DownloadRounded } from '@mui/icons-material';
-import { DownloadDialog } from '../../../components/download-dialog';
+import dynamic from 'next/dynamic';
+
+const DownloadDialog = dynamic(
+	() => import('../../../components/download-dialog'),
+	{ ssr: false },
+);
 
 const particleLaunch = new ParticleLaunch();
 

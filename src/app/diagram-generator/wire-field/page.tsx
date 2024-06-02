@@ -18,7 +18,12 @@ import { ButtonArrows } from '../../rhr/common';
 import { css } from '../../../../styled-system/css';
 import { WireField } from '../../rhr/wire-field';
 import { DownloadRounded } from '@mui/icons-material';
-import { DownloadDialog } from '../../../components/download-dialog';
+import dynamic from 'next/dynamic';
+
+const DownloadDialog = dynamic(
+	() => import('../../../components/download-dialog'),
+	{ ssr: false },
+);
 
 const wireField = new WireField();
 

@@ -11,7 +11,7 @@ import { DownloadRounded } from '@mui/icons-material';
 import React, { ReactNode } from 'react';
 import { css } from 'styled-system/css';
 
-export function DownloadDialog({
+export default function DownloadDialog({
 	open,
 	onClose,
 }: {

@@ -68,9 +68,6 @@ export default function DiagramGeneratorLayout({
 			<Tabs
 				size="md"
 				value={diagrams.findIndex((v) => route.split('/').pop() === v)}
-				onChange={(e, v) => {
-					router.push(`/diagram-generator/${diagrams[v as number]}`);
-				}}
 				sx={(theme) => ({
 					backgroundColor: theme.palette.background.body,
 					[`& .${tabClasses.root}`]: {
@@ -83,8 +80,20 @@ export default function DiagramGeneratorLayout({
 				})}
 			>
 				<TabList disableUnderline sx={{ borderRadius: 'xl', gap: 1, p: 1 }}>
-					<Tab disableIndicator>Particle Launch</Tab>
-					<Tab disableIndicator>Wire Field</Tab>
+					<Tab
+						component={Link}
+						href="/diagram-generator/particle-launch"
+						disableIndicator
+					>
+						Particle Launch
+					</Tab>
+					<Tab
+						component={Link}
+						href="/diagram-generator/wire-field"
+						disableIndicator
+					>
+						Wire Field
+					</Tab>
 				</TabList>
 			</Tabs>
 			<Divider />
