@@ -55,6 +55,21 @@ const theme = extendTheme({
 				}),
 			},
 		},
+
+		JoyRadio: {
+			defaultProps: {
+				color: 'neutral',
+			},
+			styleOverrides: {
+				radio: ({ theme }) => ({
+					borderRadius: theme.vars.radius.lg,
+				}),
+				root: ({ theme }) => ({
+					padding: 4,
+					transition: 'background-color 150ms ease-in-out',
+				}),
+			},
+		},
 	},
 
 	fontFamily: {

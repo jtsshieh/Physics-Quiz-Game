@@ -63,3 +63,42 @@ export const ButtonArrows = {
 		</svg>
 	),
 };
+
+export function NegativeCharge({
+	x,
+	y,
+	r,
+}: {
+	x: number;
+	y: number;
+	r?: number;
+}) {
+	const radius = r ?? 5;
+	return (
+		<polyline
+			points={`${x - radius}, ${y}, ${x + radius}, ${y}`}
+			stroke="black"
+		/>
+	);
+}
+
+export function PositiveCharge({
+	x,
+	y,
+	r,
+}: {
+	x: number;
+	y: number;
+	r?: number;
+}) {
+	const radius = r ?? 5;
+	return (
+		<>
+			<NegativeCharge x={x} y={y} r={r} />
+			<polyline
+				points={`${x}, ${y - radius}, ${x}, ${y + radius}`}
+				stroke="black"
+			/>
+		</>
+	);
+}

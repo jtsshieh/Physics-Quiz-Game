@@ -7,7 +7,7 @@ import { MathJax } from 'better-react-mathjax';
 import { crossProduct, vecEq } from '../../utils';
 import { IntoPage, OutOfPage } from '../../components/vector-field';
 
-interface WireFieldState {
+export interface WireFieldState {
 	currentDirection: number;
 	radiusDirection: number;
 
@@ -25,41 +25,70 @@ export class WireField implements RHRProblemType<WireFieldState> {
 		'the specified direction. Select the direction of the magnetic field ' +
 		'at Point \\(P\\).';
 
+	getRadiiDirections(currentDirection: number) {
+		if (
+			currentDirection === Directions.OutOfPage ||
+			currentDirection === Directions.IntoPage
+		) {
+			return Object.values(Directions).slice(2, 6);
+		} else if (
+			currentDirection === Directions.Left ||
+			currentDirection === Directions.Right
+		) {
+			return Object.values(Directions).slice(4, 6);
+		} else if (
+			currentDirection === Directions.Up ||
+			currentDirection === Directions.Down
+		) {
+			return Object.values(Directions).slice(2, 4);
+		} else {
+			return Object.values(Directions);
+		}
+	}
+
+	getMaxX(currentDirection: number) {
+		return currentDirection === Directions.Left ||
+			currentDirection === Directions.Right
+			? 400
+			: 200;
+	}
+
+	getMaxY(currentDirection: number) {
+		return currentDirection === Directions.Up ||
+			currentDirection === Directions.Down
+			? 400
+			: 200;
+	}
+
 	resetState() {
 		const currentDirection =
 			Object.values(Directions)[
 				Math.floor(Math.random() * (Object.keys(Directions).length - 1))
 			];
 
-		let radiusDirection;
+		const radiiDirections = this.getRadiiDirections(currentDirection);
+		const radiusDirection =
+			radiiDirections[Math.floor(Math.random() * radiiDirections.length)];
+		const radiusVector = DirectionVectors[radiusDirection];
+
 		let px;
 		let py;
 		if (
 			currentDirection === Directions.OutOfPage ||
 			currentDirection === Directions.IntoPage
 		) {
-			radiusDirection =
-				Object.values(Directions)[Math.floor(Math.random() * 4) + 2];
-			const radiusVector = DirectionVectors[radiusDirection];
 			px = 100 + radiusVector[0] * 60;
 			py = 100 + radiusVector[1] * -60;
 		} else if (
 			currentDirection === Directions.Left ||
 			currentDirection === Directions.Right
 		) {
-			radiusDirection =
-				Object.values(Directions)[Math.floor(Math.random() * 2) + 4];
-			const radiusVector = DirectionVectors[radiusDirection];
 			px = Math.random() * 200 + 100;
 			py = 100 + radiusVector[1] * -50;
 		} else if (
 			currentDirection === Directions.Up ||
 			currentDirection === Directions.Down
 		) {
-			radiusDirection =
-				Object.values(Directions)[Math.floor(Math.random() * 2) + 2];
-			const radiusVector = DirectionVectors[radiusDirection];
-
 			px = 100 + radiusVector[0] * 50;
 			py = Math.random() * 200 + 100;
 		}
@@ -71,7 +100,7 @@ export class WireField implements RHRProblemType<WireFieldState> {
 		};
 	}
 
-	renderDiagram({ currentDirection, px, py }) {
+	renderDiagram({ currentDirection, px, py }, ref) {
 		const isVertical =
 			currentDirection === Directions.Up ||
 			currentDirection === Directions.Down;
@@ -88,7 +117,8 @@ export class WireField implements RHRProblemType<WireFieldState> {
 					isHorizontal && css({ maxW: '400px' }),
 					!isHorizontal && !isVertical && css({ maxH: '200px', maxW: '200px' }),
 				)}
-				viewBox={`0 0 ${isHorizontal ? 400 : 200} ${isVertical ? 400 : 200}`}
+				ref={ref}
+				viewBox={`0 0 ${this.getMaxX(currentDirection)} ${this.getMaxY(currentDirection)}`}
 			>
 				<defs>
 					<marker

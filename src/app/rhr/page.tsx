@@ -135,145 +135,141 @@ export default function RightHandRule() {
 	return (
 		<div
 			className={stack({
-				direction: 'row',
-				justify: 'center',
+				direction: 'column',
+				alignItems: 'center',
+				gap: 0,
 				w: '100vw',
 				h: '100dvh',
 			})}
 		>
+			<SettingsMenu
+				settingsOpen={settingsOpen}
+				setSettingsOpen={setSettingsOpen}
+				currentPool={problemPool}
+				genNewProblem={genNewProblem}
+			/>
+			<TransitionDialog open={helpOpen} onClose={() => setHelpOpen(false)}>
+				<ModalClose />
+				<DialogTitle>
+					<HelpIcon /> Problem Information
+				</DialogTitle>
+				<Divider />
+				<DialogContent>
+					<Typography level="body-md">
+						<b>Name</b>: {problemType.name}
+					</Typography>
+					<Typography level="body-md">
+						<b>ID</b>: {problemType.id}
+					</Typography>
+					<Typography level="body-md">
+						<b>Description</b>: {problemType.description}
+					</Typography>
+				</DialogContent>
+			</TransitionDialog>
+			<ResultSnackbar
+				open={checkerOpen}
+				correct={correctState}
+				setClose={() => {
+					setCheckerOpen(false);
+					if (correctState) genNewProblem();
+				}}
+			/>
 			<div
 				className={stack({
-					direction: 'column',
-					alignItems: 'center',
-					flex: 'auto',
-					gap: 0,
+					direction: 'row',
+					justify: 'center',
+					align: 'center',
+					width: '100%',
+					p: 2,
 				})}
 			>
-				<SettingsMenu
-					settingsOpen={settingsOpen}
-					setSettingsOpen={setSettingsOpen}
-					currentPool={problemPool}
-					genNewProblem={genNewProblem}
-				/>
-				<TransitionDialog open={helpOpen} onClose={() => setHelpOpen(false)}>
-					<ModalClose />
-					<DialogTitle>
-						<HelpIcon /> Problem Information
-					</DialogTitle>
-					<Divider />
-					<DialogContent>
-						<Typography level="body-md">
-							<b>Name</b>: {problemType.name}
-						</Typography>
-						<Typography level="body-md">
-							<b>ID</b>: {problemType.id}
-						</Typography>
-						<Typography level="body-md">
-							<b>Description</b>: {problemType.description}
-						</Typography>
-					</DialogContent>
-				</TransitionDialog>
-				<ResultSnackbar
-					open={checkerOpen}
-					correct={correctState}
-					setClose={() => {
-						setCheckerOpen(false);
-						if (correctState) genNewProblem();
-					}}
-				/>
 				<div
 					className={stack({
 						direction: 'row',
-						justify: 'center',
-						align: 'center',
-						width: '100%',
-						p: 4,
+						gap: 2,
+						flex: 'auto',
+						alignItems: 'center',
 					})}
 				>
 					<IconButton component={Link} href="/">
 						<ArrowBackIcon />
 					</IconButton>
-					<Typography
-						level="h4"
-						className={css({ flex: '1', textAlign: 'center' })}
-					>
-						Right Hand Rule
-					</Typography>
-					<div className={stack({ direction: 'row', gap: '2' })}>
-						<IconButton onClick={() => setSettingsOpen(true)}>
-							<SettingsIcon />
-						</IconButton>
-						<IconButton onClick={() => setHelpOpen(true)}>
-							<HelpIcon />
-						</IconButton>
-					</div>
+					<Typography level="h4">Right Hand Rule</Typography>
 				</div>
-				<Divider />
+				<div className={stack({ direction: 'row', gap: 2 })}>
+					<IconButton onClick={() => setSettingsOpen(true)}>
+						<SettingsIcon />
+					</IconButton>
+					<IconButton onClick={() => setHelpOpen(true)}>
+						<HelpIcon />
+					</IconButton>
+				</div>
+			</div>
+			<Divider />
+			<div
+				className={stack({
+					direction: 'column',
+					align: 'center',
+					backgroundColor: 'var(--joy-palette-background-level1)',
+					w: '100%',
+					flex: 'auto',
+					p: 4,
+					minHeight: 0,
+				})}
+			>
 				<div
 					className={stack({
 						direction: 'column',
-						align: 'center',
-						backgroundColor: 'var(--joy-palette-background-level1)',
-						w: '100%',
+						alignItems: 'center',
+						maxWidth: '750px',
 						flex: 'auto',
-						p: 4,
 						minHeight: 0,
 					})}
 				>
 					<div
 						className={stack({
 							direction: 'column',
+							gap: '4',
 							alignItems: 'center',
-							maxWidth: '750px',
 							flex: 'auto',
 							minHeight: 0,
 						})}
 					>
-						<div
-							className={stack({
-								direction: 'column',
-								gap: '4',
-								alignItems: 'center',
-								flex: 'auto',
-								minHeight: 0,
-							})}
+						<Typography
+							level="body-md"
+							sx={{
+								[theme.breakpoints.up('sm')]: {
+									fontSize: theme.typography['body-lg'],
+								},
+							}}
 						>
-							<Typography
-								level="body-md"
-								sx={{
-									[theme.breakpoints.up('sm')]: {
-										fontSize: theme.typography['body-lg'],
-									},
-								}}
-							>
-								<MathJax dynamic inline>
-									<b>Directions</b>: <span>{problemType.directions}</span>
-								</MathJax>
-							</Typography>
-							{/*//@ts-expect-error: game state is synced with problem type*/}
-							{problemType.renderDiagram(gameState)}
-						</div>
-						<div
-							className={stack({
-								direction: 'row',
-								gap: '2',
-								flexWrap: 'wrap',
-								justify: 'center',
-							})}
-						>
-							{problemType
-								// @ts-expect-error: game state is synced with problem type
-								.getAnswerChoices(gameState)
-								.map(({ element, correct, key }) => (
-									<Button
-										disabled={checkerOpen}
-										key={key}
-										onClick={createCheckAnswer(correct)}
-									>
-										{element}
-									</Button>
-								))}
-						</div>
+							<MathJax dynamic inline>
+								<b>Directions</b>: <span>{problemType.directions}</span>
+							</MathJax>
+						</Typography>
+						{/*//@ts-expect-error: game state is synced with problem type*/}
+						{problemType.renderDiagram(gameState)}
+					</div>
+					<div
+						className={stack({
+							direction: 'row',
+							gap: '2',
+							flexWrap: 'wrap',
+							justify: 'center',
+						})}
+					>
+						{problemType
+							// @ts-expect-error: game state is synced with problem type
+							.getAnswerChoices(gameState)
+							.map(({ element, correct, key }) => (
+								<Button
+									disabled={checkerOpen}
+									key={key}
+									onClick={createCheckAnswer(correct)}
+								>
+									{element}
+								</Button>
+							))}
 					</div>
 				</div>
 			</div>

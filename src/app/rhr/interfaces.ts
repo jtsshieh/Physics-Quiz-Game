@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, Ref } from 'react';
 
 export interface RHRProblemType<GameState> {
 	id: string;
@@ -7,7 +7,7 @@ export interface RHRProblemType<GameState> {
 	directions: string;
 
 	resetState: () => GameState;
-	renderDiagram: (state: GameState) => ReactElement;
+	renderDiagram: (state: GameState, ref?: Ref<SVGElement>) => ReactElement;
 	getAnswerChoices: (state: GameState) => AnswerChoice[];
 }
 

@@ -4,7 +4,7 @@ import { Directions, DirectionVectors } from '../../constants';
 import { css, cx } from '../../../styled-system/css';
 import VectorField from '../../components/vector-field';
 import { MathJax } from 'better-react-mathjax';
-import { ButtonArrows } from './common';
+import { ButtonArrows, NegativeCharge, PositiveCharge } from './common';
 import { crossProduct, flip, vecEq } from '../../utils';
 
 interface ParticleLaunchState {
@@ -35,7 +35,10 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 		};
 	}
 
-	renderDiagram({ vectorFieldDirection, particleCharge, particleVelocity }) {
+	renderDiagram(
+		{ vectorFieldDirection, particleCharge, particleVelocity },
+		ref,
+	) {
 		const isVertical =
 			particleVelocity == Directions.Up || particleVelocity == Directions.Down;
 
@@ -50,6 +53,7 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 
 		return (
 			<svg
+				xmlns="http://www.w3.org/2000/svg"
 				width="100%"
 				height="100%"
 				className={cx(
@@ -57,6 +61,7 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 					!isVertical && css({ maxW: '400px' }),
 				)}
 				viewBox={`0 0 ${isVertical ? 200 : 400} ${isVertical ? 400 : 200}`}
+				ref={ref}
 			>
 				<VectorField
 					x={isVertical || particleVelocity === Directions.Left ? 0 : 200}
@@ -71,17 +76,13 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 					height="200"
 				>
 					<circle cx={circleX} cy={circleY} stroke="black" fill="none" r={10} />
-					<polyline
-						points={`${circleX - 5}, ${circleY}, ${circleX + 5}, ${circleY}`}
-						stroke="black"
-					/>
 
-					{particleCharge && (
-						<polyline
-							points={`${circleX}, ${circleY - 5}, ${circleX}, ${circleY + 5}`}
-							stroke="black"
-						/>
+					{particleCharge ? (
+						<PositiveCharge x={circleX} y={circleY} />
+					) : (
+						<NegativeCharge x={circleX} y={circleY} />
 					)}
+
 					<defs>
 						<marker
 							id="arrow"
