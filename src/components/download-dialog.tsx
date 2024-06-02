@@ -1,4 +1,3 @@
-import { css } from '@/styled-system/css';
 import { DownloadRounded } from '@mui/icons-material';
 import {
 	DialogContent,
@@ -8,7 +7,9 @@ import {
 	Typography,
 	useTheme,
 } from '@mui/joy';
+import { css } from '@styled-system/css';
 import { ReactNode } from 'react';
+
 import { TransitionDialog } from './transition-dialog';
 
 export default function DownloadDialog({

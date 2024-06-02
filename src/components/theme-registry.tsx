@@ -1,9 +1,11 @@
 'use client';
+
 import { extendTheme } from '@mui/joy';
 import CssBaseline from '@mui/joy/CssBaseline';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
+
 import NextAppDirEmotionCacheProvider from './emotion-cache';
 
 const inter = Inter({

@@ -1,7 +1,9 @@
-import { css, cx } from '@/styled-system/css';
-import { Directions, DirectionVectors } from '@/utils/direction-constants';
-import { crossProduct, flip, vecEq } from '@/utils/vector-utils';
+import { css, cx } from '@styled-system/css';
 import { MathJax } from 'better-react-mathjax';
+
+import { DirectionVectors, Directions } from '@/utils/direction-constants';
+import { crossProduct, flip, vecEq } from '@/utils/vector-utils';
+
 import VectorField from '../../components/vector-field';
 import { ButtonArrows, NegativeCharge, PositiveCharge } from './common';
 import { RHRProblemType } from './interfaces';

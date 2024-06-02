@@ -1,7 +1,7 @@
-import { css } from '@/styled-system/css';
-import { stack } from '@/styled-system/patterns';
 import { Cancel, CheckCircle } from '@mui/icons-material';
 import { Snackbar, Typography, useTheme } from '@mui/joy';
+import { css } from '@styled-system/css';
+import { stack } from '@styled-system/patterns';
 
 export function ResultSnackbar({
 	correct,

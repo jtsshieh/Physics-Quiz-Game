@@ -1,15 +1,16 @@
 'use client';
-import { grid, stack } from '@/styled-system/patterns';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
 	Divider,
 	IconButton,
 	Tab,
-	tabClasses,
 	TabList,
 	Tabs,
 	Typography,
+	tabClasses,
 } from '@mui/joy';
+import { grid, stack } from '@styled-system/patterns';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';

@@ -1,8 +1,10 @@
-import { IntoPage, OutOfPage } from '@/components/vector-field';
-import { css, cx } from '@/styled-system/css';
-import { Directions, DirectionVectors } from '@/utils/direction-constants';
-import { crossProduct, vecEq } from '@/utils/vector-utils';
+import { css, cx } from '@styled-system/css';
 import { MathJax } from 'better-react-mathjax';
+
+import { IntoPage, OutOfPage } from '@/components/vector-field';
+import { DirectionVectors, Directions } from '@/utils/direction-constants';
+import { crossProduct, vecEq } from '@/utils/vector-utils';
+
 import { ButtonArrows } from './common';
 import { RHRProblemType } from './interfaces';
 

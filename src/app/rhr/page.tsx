@@ -1,14 +1,11 @@
 'use client';
-import { ResultSnackbar } from '@/components/result-snackbar';
-import { TransitionDialog } from '@/components/transition-dialog';
-import { stack } from '@/styled-system/patterns';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HelpIcon from '@mui/icons-material/Help';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
 	Button,
 	Checkbox,
-	checkboxClasses,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
@@ -19,12 +16,18 @@ import {
 	ModalClose,
 	Snackbar,
 	Typography,
+	checkboxClasses,
 	useTheme,
 } from '@mui/joy';
+import { stack } from '@styled-system/patterns';
 import { MathJax } from 'better-react-mathjax';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+
+import { ResultSnackbar } from '@/components/result-snackbar';
+import { TransitionDialog } from '@/components/transition-dialog';
+
 import { ParticleLaunch } from './particle-launch';
 import { WireField } from './wire-field';
 
