@@ -11,7 +11,7 @@ import {
 } from '@mui/joy';
 import Link from 'next/link';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 const diagrams = ['particle-launch', 'wire-field'];
@@ -23,6 +23,14 @@ export default function DiagramGeneratorLayout({
 }) {
 	const route = usePathname();
 	const router = useRouter();
+	const [hasMounted, setHasMounted] = useState(false);
+	useEffect(() => {
+		setHasMounted(true);
+	}, []);
+
+	if (!hasMounted) {
+		return null;
+	}
 
 	return (
 		<div
