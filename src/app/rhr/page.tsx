@@ -241,7 +241,7 @@ export default function RightHandRule() {
 								},
 							}}
 						>
-							<MathJax inline>
+							<MathJax dynamic inline>
 								<b>Directions</b>:{' '}
 								<span className={css({ ['& svg']: { display: 'inline' } })}>
 									{problemType.directions}
