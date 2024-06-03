@@ -1,12 +1,21 @@
 'use client';
 
-import { DownloadRounded } from '@mui/icons-material';
+import {
+	DownloadRounded,
+	Image as ImageIcon,
+	Landscape as LandscapeIcon,
+} from '@mui/icons-material';
 import {
 	Divider,
+	Dropdown,
 	FormControl,
 	FormLabel,
 	IconButton,
 	Input,
+	ListItemDecorator,
+	Menu,
+	MenuButton,
+	MenuItem,
 	Radio,
 	RadioGroup,
 	Slider,
@@ -78,8 +87,43 @@ export default function DualWireFieldsGenerator() {
 		setTempY(sanitized.toString());
 	};
 
-	const handleDownload = () => {
-		setDownloadDialogOpen(true);
+	const handleDownload = (type: 'svg' | 'png') => {
+		const svg = wireFieldRef.current!;
+
+		const data = new XMLSerializer().serializeToString(svg);
+		const svgBlob = new Blob([data], {
+			type: 'image/svg+xml;charset=utf-8',
+		});
+		const url = URL.createObjectURL(svgBlob);
+		if (type === 'svg') {
+			const a = document.createElement('a');
+			a.download = 'diagram.svg';
+			a.href = url;
+			a.click();
+			a.remove();
+		} else {
+			// load the SVG blob to a flesh image object
+			const img = new Image();
+			img.addEventListener('load', () => {
+				const canvas = document.createElement('canvas');
+				canvas.width = 1600;
+				canvas.height = 1600;
+
+				const context = canvas.getContext('2d');
+				context!.drawImage(img, 0, 0, 1600, 1600);
+
+				URL.revokeObjectURL(url);
+
+				// trigger a synthetic download operation with a temporary link
+				const a = document.createElement('a');
+				a.download = 'diagram.png';
+				document.body.appendChild(a);
+				a.href = canvas.toDataURL();
+				a.click();
+				a.remove();
+			});
+			img.src = url;
+		}
 	};
 
 	return (
@@ -324,9 +368,30 @@ export default function DualWireFieldsGenerator() {
 					<Typography level="h3" className={css({ flex: 1 })}>
 						Generated Diagram
 					</Typography>
-					<IconButton variant="outlined" onClick={handleDownload}>
-						<DownloadRounded />
-					</IconButton>
+					<Dropdown>
+						<MenuButton
+							slots={{ root: IconButton }}
+							slotProps={{
+								root: { variant: 'outlined' },
+							}}
+						>
+							<DownloadRounded />
+						</MenuButton>
+						<Menu placement="bottom-end" variant="outlined">
+							<MenuItem onClick={() => handleDownload('svg')}>
+								<ListItemDecorator>
+									<LandscapeIcon />
+								</ListItemDecorator>
+								SVG
+							</MenuItem>
+							<MenuItem onClick={() => handleDownload('png')}>
+								<ListItemDecorator>
+									<ImageIcon />
+								</ListItemDecorator>
+								PNG
+							</MenuItem>
+						</Menu>
+					</Dropdown>
 				</div>
 				<div
 					className={stack({

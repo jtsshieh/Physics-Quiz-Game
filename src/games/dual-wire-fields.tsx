@@ -1,5 +1,6 @@
 import { css, cx } from '@styled-system/css';
-import { MathJax } from 'better-react-mathjax';
+import { MathJax, MathJaxBaseContext } from 'better-react-mathjax';
+import { useContext, useEffect, useRef } from 'react';
 
 import { ButtonArrows } from '@/components/button-arrows';
 import { IntoPage, OutOfPage } from '@/components/vector-field';
@@ -251,84 +252,49 @@ export class DualWireFields implements RHRProblemType<DualWireFieldsState> {
 				)}
 				<Point x={px} y={py} name="P" />
 
-				<foreignObject
+				<BetterMathJax
 					x={
 						isYAxis(currentDirection1)
-							? 125
+							? 135
 							: isXAxis(currentDirection1)
-								? 175
+								? 200
 								: isXAxis(relCurrentDirection!)
-									? 120
+									? 125
 									: 220
 					}
 					y={
 						isYAxis(currentDirection1)
-							? 175
+							? 200
 							: isXAxis(currentDirection1)
-								? 125
+								? 140
 								: isYAxis(relCurrentDirection!)
-									? 45
-									: 150
+									? 65
+									: 170
 					}
-					width="50"
-					height="50"
-				>
-					<div
-						className={cx(
-							css({
-								display: 'flex',
-								flexDirection: 'column',
-								width: '100%',
-								height: '100%',
-								p: 2,
-								position: 'fixed',
-								justifyContent: 'flex-end',
-								alignItems: 'flex-start',
-							}),
-						)}
-					>
-						<MathJax inline={true}>{'\\(I\\)'}</MathJax>
-					</div>
-				</foreignObject>
-				<foreignObject
+					text={'I'}
+				/>
+
+				<BetterMathJax
 					x={
 						isYAxis(currentDirection1)
-							? 275
+							? 285
 							: isXAxis(currentDirection1)
-								? 175
+								? 200
 								: isXAxis(relCurrentDirection!)
-									? 320
+									? 325
 									: 220
 					}
 					y={
 						isYAxis(currentDirection1)
-							? 175
+							? 200
 							: isXAxis(currentDirection1)
-								? 275
+								? 290
 								: isYAxis(relCurrentDirection!)
-									? 250
-									: 150
+									? 265
+									: 170
 					}
-					width="50"
-					height="50"
-				>
-					<div
-						className={cx(
-							css({
-								display: 'flex',
-								flexDirection: 'column',
-								width: '100%',
-								height: '100%',
-								p: 2,
-								position: 'fixed',
-								justifyContent: 'flex-end',
-								alignItems: 'flex-start',
-							}),
-						)}
-					>
-						<MathJax inline={true}>{'\\(I\\)'}</MathJax>
-					</div>
-				</foreignObject>
+					text="I"
+				/>
 			</svg>
 		);
 	}
@@ -393,23 +359,37 @@ function Point({ x, y, name }: { x: number; y: number; name: string }) {
 	return (
 		<>
 			<circle cx={x} cy={y} r={5} />
-			<foreignObject x={x} y={y - 25} width="50" height="50">
-				<div
-					className={cx(
-						css({
-							display: 'flex',
-							flexDirection: 'column',
-							width: '100%',
-							height: '100%',
-							p: 2,
-							position: 'fixed',
-							justifyContent: 'center',
-						}),
-					)}
-				>
-					<MathJax inline={true}>{`\\(${name}\\)`}</MathJax>
-				</div>
-			</foreignObject>
+			<BetterMathJax x={x + 5} y={y - 5} text={`${name}`} />
 		</>
+	);
+}
+
+function BetterMathJax({ text, x, y }: { text: string; x: number; y: number }) {
+	const mjPromise = useContext(MathJaxBaseContext);
+	const ref = useRef<SVGSVGElement>(null);
+
+	useEffect(() => {
+		if (mjPromise) {
+			mjPromise.promise.then((mathJax) => {
+				mathJax.startup.promise
+					.then(() =>
+						mathJax['tex2svgPromise'](text, {
+							display: false,
+						}),
+					)
+					.then((output) => {
+						mathJax.startup.document.clear();
+						mathJax.startup.document.updateDocument();
+						// output.children[0].setAttribute('x', x);
+						// output.children[0].setAttribute('y', y);
+						ref.current!.outerHTML = output.children[0].outerHTML;
+					});
+			});
+		}
+	}, []);
+	return (
+		<svg x={x} y={y}>
+			<svg ref={ref}></svg>
+		</svg>
 	);
 }

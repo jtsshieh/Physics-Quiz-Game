@@ -19,6 +19,7 @@ import {
 	checkboxClasses,
 	useTheme,
 } from '@mui/joy';
+import { css } from '@styled-system/css';
 import { stack } from '@styled-system/patterns';
 import { MathJax } from 'better-react-mathjax';
 import Link from 'next/link';
@@ -240,8 +241,11 @@ export default function RightHandRule() {
 								},
 							}}
 						>
-							<MathJax dynamic inline>
-								<b>Directions</b>: <span>{problemType.directions}</span>
+							<MathJax inline>
+								<b>Directions</b>:{' '}
+								<span className={css({ ['& svg']: { display: 'inline' } })}>
+									{problemType.directions}
+								</span>
 							</MathJax>
 						</Typography>
 						{/*//@ts-expect-error: game state is synced with problem type*/}
