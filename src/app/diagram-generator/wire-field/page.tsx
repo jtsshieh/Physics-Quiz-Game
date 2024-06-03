@@ -15,19 +15,12 @@ import {
 } from '@mui/joy';
 import { css } from '@styled-system/css';
 import { hstack, stack } from '@styled-system/patterns';
-import dynamic from 'next/dynamic';
 import { useRef, useState } from 'react';
 
 import { ButtonArrows } from '@/components/button-arrows';
+import { DownloadButton } from '@/components/download-button';
 import { WireField } from '@/games/wire-field';
 import { Directions } from '@/lib/direction-constants';
-
-const DownloadDialog = dynamic(
-	() => import('@/components/popups/download-dialog'),
-	{
-		ssr: false,
-	},
-);
 
 const wireField = new WireField();
 
@@ -38,12 +31,10 @@ export default function WireFieldDiagramGenerator() {
 		px: 160,
 		py: 100,
 	});
-	const wireFieldRef = useRef<SVGSVGElement>();
+	const wireFieldRef = useRef<SVGSVGElement>(null);
 
 	const [tempX, setTempX] = useState('160');
 	const [tempY, setTempY] = useState('100');
-
-	const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
 
 	const xBound = wireField.getMaxX(wireFieldState.currentDirection);
 	const yBound = wireField.getMaxY(wireFieldState.currentDirection);
@@ -66,16 +57,8 @@ export default function WireFieldDiagramGenerator() {
 		setTempY(sanitized.toString());
 	};
 
-	const handleDownload = () => {
-		setDownloadDialogOpen(true);
-	};
-
 	return (
 		<>
-			<DownloadDialog
-				open={downloadDialogOpen}
-				onClose={() => setDownloadDialogOpen(false)}
-			/>
 			<div
 				className={stack({
 					direction: 'column',
@@ -218,9 +201,7 @@ export default function WireFieldDiagramGenerator() {
 					<Typography level="h3" className={css({ flex: 1 })}>
 						Generated Diagram
 					</Typography>
-					<IconButton variant="outlined" onClick={handleDownload}>
-						<DownloadRounded />
-					</IconButton>
+					<DownloadButton svgRef={wireFieldRef} />
 				</div>
 				<div
 					className={stack({

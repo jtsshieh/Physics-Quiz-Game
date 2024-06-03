@@ -1,9 +1,8 @@
-import { css, cx } from '@styled-system/css';
-import { MathJax, MathJaxBaseContext } from 'better-react-mathjax';
-import { useContext, useEffect, useRef } from 'react';
+import { css } from '@styled-system/css';
 
 import { ButtonArrows } from '@/components/button-arrows';
-import { IntoPage, OutOfPage } from '@/components/vector-field';
+import { XYCurrent, ZCurrent } from '@/components/current';
+import { Point } from '@/components/point';
 import {
 	DirectionVectors,
 	Directions,
@@ -96,8 +95,8 @@ export class DualWireFields implements RHRProblemType<DualWireFieldsState> {
 		const radiusVector = DirectionVectors[radiusDirection];
 
 		if (isZAxis(currentDirection1)) {
-			px = 200 + radiusVector[0] * 175;
-			py = 200 + radiusVector[1] * -175;
+			px = 200 + radiusVector[0] * 150;
+			py = 200 + radiusVector[1] * -150;
 		} else if (isXAxis(currentDirection1)) {
 			px = Math.random() * 200 + 100;
 			py = 200 + radiusVector[1] * -150;
@@ -149,152 +148,34 @@ export class DualWireFields implements RHRProblemType<DualWireFieldsState> {
 						<path d="M 0 0 L 10 5 L 0 10 z" />
 					</marker>
 				</defs>
-				{isXAxis(currentDirection1) && (
+				{(isXAxis(currentDirection1) || isYAxis(currentDirection1)) && (
 					<>
-						<polyline
-							points={`${currentDirection1 === Directions.Left ? 400 : 0}, 125, 200, 125 `}
-							stroke="black"
-							strokeWidth="2"
-							markerEnd="url(#arrow)"
+						<XYCurrent
+							currentDirection={currentDirection1}
+							otherCoordinate={125}
 						/>
-						<polyline
-							points={`200, 125, ${currentDirection1 === Directions.Left ? 0 : 400}, 125`}
-							stroke="black"
-							strokeWidth="2"
-						/>
-
-						<polyline
-							points={`${currentDirection2 === Directions.Left ? 400 : 0}, 275, 200, 275 `}
-							stroke="black"
-							strokeWidth="2"
-							markerEnd="url(#arrow)"
-						/>
-						<polyline
-							points={`200, 275, ${currentDirection2 === Directions.Left ? 0 : 400}, 275`}
-							stroke="black"
-							strokeWidth="2"
-						/>
-					</>
-				)}
-				{isYAxis(currentDirection1) && (
-					<>
-						<polyline
-							points={`125, ${currentDirection1 === Directions.Up ? 400 : 0}, 125, 200`}
-							stroke="black"
-							strokeWidth="2"
-							markerEnd="url(#arrow)"
-						/>
-						<polyline
-							points={`125, 200, 125, ${currentDirection1 === Directions.Up ? 0 : 400}`}
-							stroke="black"
-							strokeWidth="2"
-						/>
-
-						<polyline
-							points={`275, ${currentDirection2 === Directions.Up ? 400 : 0}, 275, 200`}
-							stroke="black"
-							strokeWidth="2"
-							markerEnd="url(#arrow)"
-						/>
-						<polyline
-							points={`275, 200, 275, ${currentDirection2 === Directions.Up ? 0 : 400}`}
-							stroke="black"
-							strokeWidth="2"
+						<XYCurrent
+							currentDirection={currentDirection2}
+							otherCoordinate={275}
 						/>
 					</>
 				)}
 
 				{isZAxis(currentDirection1) && relCurrentDirection && (
 					<>
-						<circle
-							cx={isXAxis(relCurrentDirection) ? 100 : 200}
-							cy={isYAxis(relCurrentDirection) ? 100 : 200}
-							r={25}
-							stroke="black"
-							fill="none"
+						<ZCurrent
+							currentDirection={currentDirection1}
+							otherCoordinate={125}
+							relCurrentDirection={relCurrentDirection}
 						/>
-
-						{currentDirection1 === Directions.IntoPage ? (
-							<IntoPage
-								x={isXAxis(relCurrentDirection) ? 100 : 200}
-								y={isYAxis(relCurrentDirection) ? 100 : 200}
-								r={15}
-							/>
-						) : (
-							<OutOfPage
-								x={isXAxis(relCurrentDirection) ? 100 : 200}
-								y={isYAxis(relCurrentDirection) ? 100 : 200}
-								r={15}
-							/>
-						)}
-
-						<circle
-							cx={isXAxis(relCurrentDirection) ? 300 : 200}
-							cy={isYAxis(relCurrentDirection) ? 300 : 200}
-							r={25}
-							stroke="black"
-							fill="none"
+						<ZCurrent
+							currentDirection={currentDirection2}
+							otherCoordinate={275}
+							relCurrentDirection={relCurrentDirection}
 						/>
-						{currentDirection2 === Directions.IntoPage ? (
-							<IntoPage
-								x={isXAxis(relCurrentDirection) ? 300 : 200}
-								y={isYAxis(relCurrentDirection) ? 300 : 200}
-								r={15}
-							/>
-						) : (
-							<OutOfPage
-								x={isXAxis(relCurrentDirection) ? 300 : 200}
-								y={isYAxis(relCurrentDirection) ? 300 : 200}
-								r={15}
-							/>
-						)}
 					</>
 				)}
 				<Point x={px} y={py} name="P" />
-
-				<BetterMathJax
-					x={
-						isYAxis(currentDirection1)
-							? 135
-							: isXAxis(currentDirection1)
-								? 200
-								: isXAxis(relCurrentDirection!)
-									? 125
-									: 220
-					}
-					y={
-						isYAxis(currentDirection1)
-							? 200
-							: isXAxis(currentDirection1)
-								? 140
-								: isYAxis(relCurrentDirection!)
-									? 65
-									: 170
-					}
-					text={'I'}
-				/>
-
-				<BetterMathJax
-					x={
-						isYAxis(currentDirection1)
-							? 285
-							: isXAxis(currentDirection1)
-								? 200
-								: isXAxis(relCurrentDirection!)
-									? 325
-									: 220
-					}
-					y={
-						isYAxis(currentDirection1)
-							? 200
-							: isXAxis(currentDirection1)
-								? 290
-								: isYAxis(relCurrentDirection!)
-									? 265
-									: 170
-					}
-					text="I"
-				/>
 			</svg>
 		);
 	}
@@ -353,44 +234,4 @@ export class DualWireFields implements RHRProblemType<DualWireFieldsState> {
 			key: direction,
 		}));
 	}
-}
-
-function Point({ x, y, name }: { x: number; y: number; name: string }) {
-	return (
-		<>
-			<circle cx={x} cy={y} r={5} />
-			<BetterMathJax x={x + 5} y={y - 5} text={`${name}`} />
-		</>
-	);
-}
-
-function BetterMathJax({ text, x, y }: { text: string; x: number; y: number }) {
-	const mjPromise = useContext(MathJaxBaseContext);
-	const ref = useRef<SVGSVGElement>(null);
-
-	useEffect(() => {
-		if (mjPromise) {
-			mjPromise.promise.then((mathJax) => {
-				mathJax.startup.promise
-					.then(() =>
-						mathJax['tex2svgPromise'](text, {
-							display: false,
-						}),
-					)
-					.then((output) => {
-						mathJax.startup.document.clear();
-						mathJax.startup.document.updateDocument();
-						// output.children[0].setAttribute('x', x);
-						// output.children[0].setAttribute('y', y);
-						if (ref.current)
-							ref.current.outerHTML = output.children[0].outerHTML;
-					});
-			});
-		}
-	}, []);
-	return (
-		<svg x={x} y={y}>
-			<svg ref={ref}></svg>
-		</svg>
-	);
 }

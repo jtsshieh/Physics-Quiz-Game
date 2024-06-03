@@ -2,6 +2,8 @@ import { css, cx } from '@styled-system/css';
 import { MathJax } from 'better-react-mathjax';
 
 import { ButtonArrows } from '@/components/button-arrows';
+import { XYCurrent, ZCurrent } from '@/components/current';
+import { Point } from '@/components/point';
 import { IntoPage, OutOfPage } from '@/components/vector-field';
 import { DirectionVectors, Directions } from '@/lib/direction-constants';
 import { crossProduct, vecEq } from '@/lib/vector-utils';
@@ -134,72 +136,17 @@ export class WireField implements RHRProblemType<WireFieldState> {
 						<path d="M 0 0 L 10 5 L 0 10 z" />
 					</marker>
 				</defs>
-				{isVertical && (
-					<>
-						<polyline
-							points={`100, ${currentDirection === Directions.Up ? 400 : 0}, 100, 200`}
-							stroke="black"
-							strokeWidth="2"
-							markerEnd="url(#arrow)"
-						/>
-						<polyline
-							points={`100, 200, 100, ${currentDirection === Directions.Up ? 0 : 400}`}
-							stroke="black"
-							strokeWidth="2"
-						/>
-					</>
-				)}
-				{isHorizontal && (
-					<>
-						<polyline
-							points={`${currentDirection === Directions.Left ? 400 : 0}, 100, 200, 100 `}
-							stroke="black"
-							strokeWidth="2"
-							markerEnd="url(#arrow)"
-						/>
-						<polyline
-							points={`200, 100, ${currentDirection === Directions.Left ? 0 : 400}, 100`}
-							stroke="black"
-							strokeWidth="2"
-						/>
-					</>
+				{(isVertical || isHorizontal) && (
+					<XYCurrent
+						currentDirection={currentDirection}
+						otherCoordinate={100}
+					/>
 				)}
 
 				{!isVertical && !isHorizontal && (
-					<>
-						<circle cx={100} cy={100} r={25} stroke="black" fill="none" />
-						{currentDirection === Directions.IntoPage ? (
-							<IntoPage x={100} y={100} r={15} />
-						) : (
-							<OutOfPage x={100} y={100} r={15} />
-						)}
-					</>
+					<ZCurrent currentDirection={currentDirection} otherCoordinate={100} />
 				)}
 				<Point x={px} y={py} name="P" />
-
-				<foreignObject
-					x={isVertical ? 100 : isHorizontal ? 175 : 120}
-					y={isVertical ? 175 : isHorizontal ? 100 : 50}
-					width="50"
-					height="50"
-				>
-					<div
-						className={cx(
-							css({
-								display: 'flex',
-								flexDirection: 'column',
-								width: '100%',
-								height: '100%',
-								p: 2,
-								position: 'fixed',
-								justifyContent: 'flex-end',
-								alignItems: 'flex-start',
-							}),
-						)}
-					>
-						<MathJax inline={true}>{'\\(I\\)'}</MathJax>
-					</div>
-				</foreignObject>
 			</svg>
 		);
 	}
@@ -220,29 +167,4 @@ export class WireField implements RHRProblemType<WireFieldState> {
 			key: direction,
 		}));
 	}
-}
-
-function Point({ x, y, name }: { x: number; y: number; name: string }) {
-	return (
-		<>
-			<circle cx={x} cy={y} r={5} />
-			<foreignObject x={x} y={y - 25} width="50" height="50">
-				<div
-					className={cx(
-						css({
-							display: 'flex',
-							flexDirection: 'column',
-							width: '100%',
-							height: '100%',
-							p: 2,
-							position: 'fixed',
-							justifyContent: 'center',
-						}),
-					)}
-				>
-					<MathJax inline={true}>{`\\(${name}\\)`}</MathJax>
-				</div>
-			</foreignObject>
-		</>
-	);
 }

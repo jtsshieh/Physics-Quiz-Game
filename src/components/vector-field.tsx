@@ -1,7 +1,8 @@
-import { MathJax } from 'better-react-mathjax';
 import { ReactElement } from 'react';
 
 import { Directions } from '@/lib/direction-constants';
+
+import { BetterMathJax } from './better-math-jax';
 
 export function IntoPage({ x, y, r }: { x: number; y: number; r?: number }) {
 	const radius = r ?? 5;
@@ -114,20 +115,7 @@ export default function VectorField({
 		<svg width="200" height="200" x={x} y={y}>
 			<rect x={0} y={0} height={200} width={200} fill="none" stroke="black" />
 			{vectorField}
-			<foreignObject x="75" y="75" width="50" height="50">
-				<div
-					style={{
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-						width: '100%',
-						height: '100%',
-						position: 'fixed',
-					}}
-				>
-					<MathJax>{'\\(\\mathbf{\\vec{B}}\\)'}</MathJax>
-				</div>
-			</foreignObject>
+			<BetterMathJax text={'\\mathbf{\\vec{B}}'} x={92.5} y={85} />
 		</svg>
 	);
 }

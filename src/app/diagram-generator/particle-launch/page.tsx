@@ -13,7 +13,6 @@ import {
 } from '@mui/joy';
 import { css } from '@styled-system/css';
 import { hstack, stack } from '@styled-system/patterns';
-import dynamic from 'next/dynamic';
 import { useRef, useState } from 'react';
 
 import {
@@ -21,15 +20,9 @@ import {
 	NegativeCharge,
 	PositiveCharge,
 } from '@/components/button-arrows';
+import { DownloadButton } from '@/components/download-button';
 import { ParticleLaunch } from '@/games/particle-launch';
 import { Directions } from '@/lib/direction-constants';
-
-const DownloadDialog = dynamic(
-	() => import('@/components/popups/download-dialog'),
-	{
-		ssr: false,
-	},
-);
 
 const particleLaunch = new ParticleLaunch();
 
@@ -39,19 +32,10 @@ export default function ParticleLaunchDiagramGenerator() {
 		particleCharge: true,
 		particleVelocity: Directions.Right,
 	});
-	const particleLaunchRef = useRef<SVGSVGElement>();
-	const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
-
-	const handleDownload = () => {
-		setDownloadDialogOpen(true);
-	};
+	const particleLaunchRef = useRef<SVGSVGElement>(null);
 
 	return (
 		<>
-			<DownloadDialog
-				open={downloadDialogOpen}
-				onClose={() => setDownloadDialogOpen(false)}
-			/>
 			<div
 				className={stack({
 					direction: 'column',
@@ -193,9 +177,7 @@ export default function ParticleLaunchDiagramGenerator() {
 					<Typography level="h3" className={css({ flex: 1 })}>
 						Generated Diagram
 					</Typography>
-					<IconButton variant="outlined" onClick={handleDownload}>
-						<DownloadRounded />
-					</IconButton>
+					<DownloadButton svgRef={particleLaunchRef} />
 				</div>
 				<div
 					className={stack({

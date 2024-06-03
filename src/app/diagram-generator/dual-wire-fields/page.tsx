@@ -1,21 +1,10 @@
 'use client';
 
 import {
-	DownloadRounded,
-	Image as ImageIcon,
-	Landscape as LandscapeIcon,
-} from '@mui/icons-material';
-import {
 	Divider,
-	Dropdown,
 	FormControl,
 	FormLabel,
-	IconButton,
 	Input,
-	ListItemDecorator,
-	Menu,
-	MenuButton,
-	MenuItem,
 	Radio,
 	RadioGroup,
 	Slider,
@@ -24,10 +13,10 @@ import {
 } from '@mui/joy';
 import { css } from '@styled-system/css';
 import { hstack, stack } from '@styled-system/patterns';
-import dynamic from 'next/dynamic';
 import { useRef, useState } from 'react';
 
 import { ButtonArrows } from '@/components/button-arrows';
+import { DownloadButton } from '@/components/download-button';
 import { DualWireFields } from '@/games/dual-wire-fields';
 import {
 	Directions,
@@ -37,13 +26,6 @@ import {
 	zDirections,
 } from '@/lib/direction-constants';
 import { isXAxis, isYAxis, isZAxis } from '@/lib/direction-utils';
-
-const DownloadDialog = dynamic(
-	() => import('@/components/popups/download-dialog'),
-	{
-		ssr: false,
-	},
-);
 
 const dualWireFields = new DualWireFields();
 
@@ -59,12 +41,10 @@ export default function DualWireFieldsGenerator() {
 		px: 200,
 		py: 200,
 	});
-	const wireFieldRef = useRef<SVGSVGElement>();
+	const wireFieldRef = useRef<SVGSVGElement>(null);
 
 	const [tempX, setTempX] = useState('200');
 	const [tempY, setTempY] = useState('200');
-
-	const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
 
 	const xBound = 400;
 	const yBound = 400;
@@ -87,51 +67,8 @@ export default function DualWireFieldsGenerator() {
 		setTempY(sanitized.toString());
 	};
 
-	const handleDownload = (type: 'svg' | 'png') => {
-		const svg = wireFieldRef.current!;
-
-		const data = new XMLSerializer().serializeToString(svg);
-		const svgBlob = new Blob([data], {
-			type: 'image/svg+xml;charset=utf-8',
-		});
-		const url = URL.createObjectURL(svgBlob);
-		if (type === 'svg') {
-			const a = document.createElement('a');
-			a.download = 'diagram.svg';
-			a.href = url;
-			a.click();
-			a.remove();
-		} else {
-			// load the SVG blob to a flesh image object
-			const img = new Image();
-			img.addEventListener('load', () => {
-				const canvas = document.createElement('canvas');
-				canvas.width = 1600;
-				canvas.height = 1600;
-
-				const context = canvas.getContext('2d');
-				context!.drawImage(img, 0, 0, 1600, 1600);
-
-				URL.revokeObjectURL(url);
-
-				// trigger a synthetic download operation with a temporary link
-				const a = document.createElement('a');
-				a.download = 'diagram.png';
-				document.body.appendChild(a);
-				a.href = canvas.toDataURL();
-				a.click();
-				a.remove();
-			});
-			img.src = url;
-		}
-	};
-
 	return (
 		<>
-			<DownloadDialog
-				open={downloadDialogOpen}
-				onClose={() => setDownloadDialogOpen(false)}
-			/>
 			<div
 				className={stack({
 					direction: 'column',
@@ -368,30 +305,7 @@ export default function DualWireFieldsGenerator() {
 					<Typography level="h3" className={css({ flex: 1 })}>
 						Generated Diagram
 					</Typography>
-					<Dropdown>
-						<MenuButton
-							slots={{ root: IconButton }}
-							slotProps={{
-								root: { variant: 'outlined' },
-							}}
-						>
-							<DownloadRounded />
-						</MenuButton>
-						<Menu placement="bottom-end" variant="outlined">
-							<MenuItem onClick={() => handleDownload('svg')}>
-								<ListItemDecorator>
-									<LandscapeIcon />
-								</ListItemDecorator>
-								SVG
-							</MenuItem>
-							<MenuItem onClick={() => handleDownload('png')}>
-								<ListItemDecorator>
-									<ImageIcon />
-								</ListItemDecorator>
-								PNG
-							</MenuItem>
-						</Menu>
-					</Dropdown>
+					<DownloadButton svgRef={wireFieldRef} />
 				</div>
 				<div
 					className={stack({

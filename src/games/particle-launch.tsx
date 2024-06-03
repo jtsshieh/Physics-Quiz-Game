@@ -1,6 +1,7 @@
 import { css, cx } from '@styled-system/css';
 import { MathJax } from 'better-react-mathjax';
 
+import { BetterMathJax } from '@/components/better-math-jax';
 import {
 	ButtonArrows,
 	NegativeCharge,
@@ -110,35 +111,23 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 						stroke="black"
 						markerEnd="url(#arrow)"
 					/>
-					<foreignObject
-						x={particleVelocity === Directions.Left ? lineEndX : 100}
-						y={particleVelocity === Directions.Up ? lineEndY : 100}
-						width="50"
-						height="50"
-					>
-						<div
-							className={cx(
-								css({
-									display: 'flex',
-									flexDirection: 'column',
-									width: '100%',
-									height: '100%',
-									p: 2,
-									position: 'fixed',
-								}),
-								isVertical &&
-									css({
-										justifyContent: 'center',
-									}),
-								!isVertical &&
-									css({
-										alignItems: 'center',
-									}),
-							)}
-						>
-							<MathJax inline={true}>{'\\(v\\)'}</MathJax>
-						</div>
-					</foreignObject>
+					<BetterMathJax
+						text="v"
+						x={
+							particleVelocity === Directions.Left
+								? lineEndX + 20
+								: particleVelocity === Directions.Right
+									? lineEndX - 30
+									: 110
+						}
+						y={
+							particleVelocity === Directions.Up
+								? lineEndY + 20
+								: particleVelocity === Directions.Down
+									? lineEndY - 30
+									: 110
+						}
+					/>
 				</svg>
 			</svg>
 		);
