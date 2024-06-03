@@ -1,11 +1,17 @@
 import { css, cx } from '@styled-system/css';
-import { MathJax } from 'better-react-mathjax';
 
 import { ButtonArrows } from '@/components/button-arrows';
 import { XYCurrent, ZCurrent } from '@/components/current';
 import { Point } from '@/components/point';
-import { IntoPage, OutOfPage } from '@/components/vector-field';
-import { DirectionVectors, Directions } from '@/lib/direction-constants';
+import {
+	DirectionVectors,
+	Directions,
+	allDirections,
+	normalDirections,
+	xyDirections,
+	yDirections,
+} from '@/lib/direction-constants';
+import { isXAxis, isYAxis, isZAxis } from '@/lib/direction-utils';
 import { crossProduct, vecEq } from '@/lib/vector-utils';
 
 import { RHRProblemType } from './interfaces';
@@ -29,45 +35,28 @@ export class WireField implements RHRProblemType<WireFieldState> {
 		'at Point \\(P\\).';
 
 	getRadiiDirections(currentDirection: number) {
-		if (
-			currentDirection === Directions.OutOfPage ||
-			currentDirection === Directions.IntoPage
-		) {
-			return Object.values(Directions).slice(2, 6);
-		} else if (
-			currentDirection === Directions.Left ||
-			currentDirection === Directions.Right
-		) {
-			return Object.values(Directions).slice(4, 6);
-		} else if (
-			currentDirection === Directions.Up ||
-			currentDirection === Directions.Down
-		) {
-			return Object.values(Directions).slice(2, 4);
+		if (isZAxis(currentDirection)) {
+			return xyDirections;
+		} else if (isXAxis(currentDirection)) {
+			return yDirections;
+		} else if (isYAxis(currentDirection)) {
+			return xyDirections;
 		} else {
-			return Object.values(Directions);
+			return allDirections;
 		}
 	}
 
 	getMaxX(currentDirection: number) {
-		return currentDirection === Directions.Left ||
-			currentDirection === Directions.Right
-			? 400
-			: 200;
+		return isXAxis(currentDirection) ? 400 : 200;
 	}
 
 	getMaxY(currentDirection: number) {
-		return currentDirection === Directions.Up ||
-			currentDirection === Directions.Down
-			? 400
-			: 200;
+		return isYAxis(currentDirection) ? 400 : 200;
 	}
 
 	resetState() {
 		const currentDirection =
-			Object.values(Directions)[
-				Math.floor(Math.random() * (Object.keys(Directions).length - 1))
-			];
+			normalDirections[Math.floor(Math.random() * normalDirections.length)];
 
 		const radiiDirections = this.getRadiiDirections(currentDirection);
 		const radiusDirection =
@@ -76,22 +65,13 @@ export class WireField implements RHRProblemType<WireFieldState> {
 
 		let px;
 		let py;
-		if (
-			currentDirection === Directions.OutOfPage ||
-			currentDirection === Directions.IntoPage
-		) {
+		if (isZAxis(currentDirection)) {
 			px = 100 + radiusVector[0] * 60;
 			py = 100 + radiusVector[1] * -60;
-		} else if (
-			currentDirection === Directions.Left ||
-			currentDirection === Directions.Right
-		) {
+		} else if (isXAxis(currentDirection)) {
 			px = Math.random() * 200 + 100;
 			py = 100 + radiusVector[1] * -50;
-		} else if (
-			currentDirection === Directions.Up ||
-			currentDirection === Directions.Down
-		) {
+		} else if (isYAxis(currentDirection)) {
 			px = 100 + radiusVector[0] * 50;
 			py = Math.random() * 200 + 100;
 		}
@@ -104,21 +84,14 @@ export class WireField implements RHRProblemType<WireFieldState> {
 	}
 
 	renderDiagram({ currentDirection, px, py }, ref) {
-		const isVertical =
-			currentDirection === Directions.Up ||
-			currentDirection === Directions.Down;
-		const isHorizontal =
-			currentDirection === Directions.Left ||
-			currentDirection === Directions.Right;
-
 		return (
 			<svg
 				width="100%"
 				height="100%"
 				className={cx(
-					isVertical && css({ maxH: '400px' }),
-					isHorizontal && css({ maxW: '400px' }),
-					!isHorizontal && !isVertical && css({ maxH: '200px', maxW: '200px' }),
+					isYAxis(currentDirection) && css({ maxH: '400px' }),
+					isXAxis(currentDirection) && css({ maxW: '400px' }),
+					isZAxis(currentDirection) && css({ maxH: '200px', maxW: '200px' }),
 				)}
 				ref={ref}
 				viewBox={`0 0 ${this.getMaxX(currentDirection)} ${this.getMaxY(currentDirection)}`}
@@ -136,14 +109,14 @@ export class WireField implements RHRProblemType<WireFieldState> {
 						<path d="M 0 0 L 10 5 L 0 10 z" />
 					</marker>
 				</defs>
-				{(isVertical || isHorizontal) && (
+				{(isXAxis(currentDirection) || isYAxis(currentDirection)) && (
 					<XYCurrent
 						currentDirection={currentDirection}
 						otherCoordinate={100}
 					/>
 				)}
 
-				{!isVertical && !isHorizontal && (
+				{isZAxis(currentDirection) && (
 					<ZCurrent currentDirection={currentDirection} otherCoordinate={100} />
 				)}
 				<Point x={px} y={py} name="P" />

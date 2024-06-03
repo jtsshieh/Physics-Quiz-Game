@@ -1,5 +1,4 @@
 import { css, cx } from '@styled-system/css';
-import { MathJax } from 'better-react-mathjax';
 
 import { BetterMathJax } from '@/components/better-math-jax';
 import {
@@ -8,7 +7,12 @@ import {
 	PositiveCharge,
 } from '@/components/button-arrows';
 import VectorField from '@/components/vector-field';
-import { DirectionVectors, Directions } from '@/lib/direction-constants';
+import {
+	DirectionVectors,
+	Directions,
+	allDirections,
+	xyDirections,
+} from '@/lib/direction-constants';
 import { crossProduct, flip, vecEq } from '@/lib/vector-utils';
 
 import { RHRProblemType } from './interfaces';
@@ -32,12 +36,10 @@ export class ParticleLaunch implements RHRProblemType<ParticleLaunchState> {
 	resetState() {
 		return {
 			vectorFieldDirection:
-				Object.values(Directions)[
-					Math.floor(Math.random() * Object.keys(Directions).length)
-				],
+				allDirections[Math.floor(Math.random() * allDirections.length)],
 			particleCharge: Math.random() > 0.5,
 			particleVelocity:
-				Object.values(Directions)[Math.floor(Math.random() * 4) + 2],
+				xyDirections[Math.floor(Math.random() * xyDirections.length)],
 		};
 	}
 

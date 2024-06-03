@@ -3,7 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Metadata } from 'next';
 import { ReactNode } from 'react';
 
-import Providers from '@/components/providers/providers';
+import { Providers } from '@/components/providers';
 
 import './globals.css';
 

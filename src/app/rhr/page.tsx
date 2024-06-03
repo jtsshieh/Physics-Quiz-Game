@@ -1,8 +1,10 @@
 'use client';
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import HelpIcon from '@mui/icons-material/Help';
-import SettingsIcon from '@mui/icons-material/Settings';
+import {
+	ArrowBack as ArrowBackIcon,
+	Help as HelpIcon,
+	Settings as SettingsIcon,
+} from '@mui/icons-material';
 import {
 	Button,
 	Checkbox,
@@ -28,8 +30,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { ResultSnackbar } from '@/components/popups/result-snackbar';
 import { TransitionDialog } from '@/components/popups/transition-dialog';
-
-import { allGames } from '../../games';
+import { allGames } from '@/games';
 
 export default function RightHandRule() {
 	const [checkerOpen, setCheckerOpen] = useState(false);

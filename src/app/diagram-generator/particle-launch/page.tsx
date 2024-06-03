@@ -1,11 +1,9 @@
 'use client';
 
-import { DownloadRounded } from '@mui/icons-material';
 import {
 	Divider,
 	FormControl,
 	FormLabel,
-	IconButton,
 	Radio,
 	RadioGroup,
 	Typography,
