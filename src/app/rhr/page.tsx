@@ -28,10 +28,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { ResultSnackbar } from '@/components/result-snackbar';
 import { TransitionDialog } from '@/components/transition-dialog';
 
+import { DualWireFields } from './dual-wire-fields';
 import { ParticleLaunch } from './particle-launch';
 import { WireField } from './wire-field';
 
-const problemTypes = [new ParticleLaunch(), new WireField()];
+const problemTypes = [
+	new ParticleLaunch(),
+	new WireField(),
+	new DualWireFields(),
+];
 
 export default function RightHandRule() {
 	const [checkerOpen, setCheckerOpen] = useState(false);

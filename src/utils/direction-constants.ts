@@ -10,6 +10,36 @@ export const Directions = {
 	None: 6,
 };
 
+/**
+ * An array of all possible directions
+ */
+export const allDirections = Object.values(Directions);
+
+/**
+ * An array of all possible directions excluding None
+ */
+export const normalDirections = allDirections.slice(0, 6);
+
+/**
+ * An array of directions along the z-axis (into the page/out of the page)
+ */
+export const zDirections = allDirections.slice(0, 2);
+
+/**
+ * An array of directions along the x-axis (left or right)
+ */
+export const xDirections = allDirections.slice(2, 4);
+
+/**
+ * An array of directions along the y-axis (up/down)
+ */
+export const yDirections = allDirections.slice(4, 6);
+
+/**
+ * An array of directions along the x-axis and y-axis
+ */
+export const xyDirections = allDirections.slice(2, 6);
+
 export const DirectionVectors: Record<number, Vector> = {
 	[Directions.IntoPage]: [0, 0, -1],
 	[Directions.OutOfPage]: [0, 0, 1],
