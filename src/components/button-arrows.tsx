@@ -1,13 +1,14 @@
 import { css } from '@styled-system/css';
 import { MathJax } from 'better-react-mathjax';
 
+import { Directions } from '@/lib/direction-constants';
+
 import {
 	HorizontalArrow,
 	IntoPage,
 	OutOfPage,
 	VerticalArrow,
-} from '@/components/vector-field';
-import { Directions } from '@/utils/direction-constants';
+} from './vector-field';
 
 export const ButtonArrows = {
 	[Directions.IntoPage]: (

@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
-const diagrams = ['particle-launch', 'wire-field'];
+const diagrams = ['particle-launch', 'wire-field', 'dual-wire-fields'];
 
 export default function DiagramGeneratorLayout({
 	children,
@@ -93,6 +93,13 @@ export default function DiagramGeneratorLayout({
 						disableIndicator
 					>
 						Wire Field
+					</Tab>
+					<Tab
+						component={Link}
+						href="/diagram-generator/dual-wire-fields"
+						disableIndicator
+					>
+						Dual Wire Field
 					</Tab>
 				</TabList>
 			</Tabs>

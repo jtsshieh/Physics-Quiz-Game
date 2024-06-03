@@ -25,18 +25,10 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ResultSnackbar } from '@/components/result-snackbar';
-import { TransitionDialog } from '@/components/transition-dialog';
+import { ResultSnackbar } from '@/components/popups/result-snackbar';
+import { TransitionDialog } from '@/components/popups/transition-dialog';
 
-import { DualWireFields } from './dual-wire-fields';
-import { ParticleLaunch } from './particle-launch';
-import { WireField } from './wire-field';
-
-const problemTypes = [
-	new ParticleLaunch(),
-	new WireField(),
-	new DualWireFields(),
-];
+import { allGames } from '../../games';
 
 export default function RightHandRule() {
 	const [checkerOpen, setCheckerOpen] = useState(false);
@@ -45,12 +37,10 @@ export default function RightHandRule() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [helpOpen, setHelpOpen] = useState(false);
 
-	const [problemPool, setProblemPool] = useState(
-		problemTypes.map(({ id }) => id),
-	);
+	const [problemPool, setProblemPool] = useState(allGames.map(({ id }) => id));
 
 	const [problemType, setProblemType] = useState(
-		problemTypes[Math.floor(Math.random() * problemPool.length)],
+		allGames[Math.floor(Math.random() * problemPool.length)],
 	);
 	const [gameState, setGameState] = useState(problemType.resetState());
 
@@ -62,7 +52,7 @@ export default function RightHandRule() {
 	const search = searchParams.get('s');
 
 	useEffect(() => {
-		const fullPool = problemTypes.map(({ id }) => id);
+		const fullPool = allGames.map(({ id }) => id);
 
 		if (!search) {
 			router.replace(
@@ -131,7 +121,7 @@ export default function RightHandRule() {
 		const pool = newPool ?? problemPool;
 		const problemTypeId = pool[Math.floor(Math.random() * pool.length)];
 
-		const newProblemType = problemTypes.find(({ id }) => id === problemTypeId);
+		const newProblemType = allGames.find(({ id }) => id === problemTypeId);
 
 		// @ts-expect-error: id is from problemPool, an array of ids, so it must exist
 		setProblemType(newProblemType);
@@ -356,7 +346,7 @@ function SettingsMenu({
 						},
 					}}
 				>
-					{problemTypes.map(({ id, name, description }) => (
+					{allGames.map(({ id, name, description }) => (
 						<ListItem key={id}>
 							<Checkbox
 								overlay

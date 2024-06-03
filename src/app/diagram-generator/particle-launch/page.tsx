@@ -16,14 +16,20 @@ import { hstack, stack } from '@styled-system/patterns';
 import dynamic from 'next/dynamic';
 import { useRef, useState } from 'react';
 
-import { Directions } from '@/utils/direction-constants';
+import {
+	ButtonArrows,
+	NegativeCharge,
+	PositiveCharge,
+} from '@/components/button-arrows';
+import { ParticleLaunch } from '@/games/particle-launch';
+import { Directions } from '@/lib/direction-constants';
 
-import { ButtonArrows, NegativeCharge, PositiveCharge } from '../../rhr/common';
-import { ParticleLaunch } from '../../rhr/particle-launch';
-
-const DownloadDialog = dynamic(() => import('@/components/download-dialog'), {
-	ssr: false,
-});
+const DownloadDialog = dynamic(
+	() => import('@/components/popups/download-dialog'),
+	{
+		ssr: false,
+	},
+);
 
 const particleLaunch = new ParticleLaunch();
 

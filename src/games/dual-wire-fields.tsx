@@ -1,6 +1,7 @@
 import { css, cx } from '@styled-system/css';
 import { MathJax } from 'better-react-mathjax';
 
+import { ButtonArrows } from '@/components/button-arrows';
 import { IntoPage, OutOfPage } from '@/components/vector-field';
 import {
 	DirectionVectors,
@@ -10,8 +11,8 @@ import {
 	xyDirections,
 	yDirections,
 	zDirections,
-} from '@/utils/direction-constants';
-import { isXAxis, isYAxis, isZAxis } from '@/utils/direction-utils';
+} from '@/lib/direction-constants';
+import { isXAxis, isYAxis, isZAxis } from '@/lib/direction-utils';
 import {
 	crossProduct,
 	flip,
@@ -19,9 +20,8 @@ import {
 	vecEq,
 	vecMulByScalar,
 	vecUnitify,
-} from '@/utils/vector-utils';
+} from '@/lib/vector-utils';
 
-import { ButtonArrows } from './common';
 import { RHRProblemType } from './interfaces';
 
 export interface DualWireFieldsState {
@@ -48,19 +48,22 @@ export class DualWireFields implements RHRProblemType<DualWireFieldsState> {
 		'wires and the points as they may affect the magnitude of the magnetic ' +
 		'field.';
 
-	getMaxX(currentDirection: number) {
-		return isYAxis(currentDirection) ? 400 : 400;
-	}
-
-	getMaxY(currentDirection: number) {
-		return isXAxis(currentDirection) ? 400 : 400;
+	getPossibleCurrent2(currentDirection1: number) {
+		if (isZAxis(currentDirection1)) {
+			return [...zDirections];
+		} else if (isYAxis(currentDirection1)) {
+			return [...yDirections];
+		} else if (isXAxis(currentDirection1)) {
+			return [...xDirections];
+		}
+		return [];
 	}
 
 	resetState() {
 		const currentDirection1 =
 			normalDirections[Math.floor(Math.random() * normalDirections.length)];
 
-		const possibleSecondCurrent: number[] = [];
+		const possibleSecondCurrent = this.getPossibleCurrent2(currentDirection1);
 		const possibleRadiusDirections = [Directions.None];
 
 		let relCurrentDirection;
@@ -68,18 +71,14 @@ export class DualWireFields implements RHRProblemType<DualWireFieldsState> {
 		let px;
 		let py;
 		if (isZAxis(currentDirection1)) {
-			possibleSecondCurrent.push(...zDirections);
-
 			relCurrentDirection =
 				xyDirections[Math.floor(Math.random() * xyDirections.length)];
 			possibleRadiusDirections.push(
 				...(isXAxis(relCurrentDirection) ? xDirections : yDirections),
 			);
 		} else if (isXAxis(currentDirection1)) {
-			possibleSecondCurrent.push(...xDirections);
 			possibleRadiusDirections.push(...yDirections);
 		} else if (isYAxis(currentDirection1)) {
-			possibleSecondCurrent.push(...yDirections);
 			possibleRadiusDirections.push(...xDirections);
 		}
 
@@ -134,7 +133,7 @@ export class DualWireFields implements RHRProblemType<DualWireFieldsState> {
 				height="100%"
 				className={css({ maxH: '400px', maxW: '400px' })}
 				ref={ref}
-				viewBox={`0 0 ${this.getMaxX(currentDirection1)} ${this.getMaxY(currentDirection1)}`}
+				viewBox={`0 0 400 400`}
 			>
 				<defs>
 					<marker

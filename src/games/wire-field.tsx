@@ -1,11 +1,11 @@
 import { css, cx } from '@styled-system/css';
 import { MathJax } from 'better-react-mathjax';
 
+import { ButtonArrows } from '@/components/button-arrows';
 import { IntoPage, OutOfPage } from '@/components/vector-field';
-import { DirectionVectors, Directions } from '@/utils/direction-constants';
-import { crossProduct, vecEq } from '@/utils/vector-utils';
+import { DirectionVectors, Directions } from '@/lib/direction-constants';
+import { crossProduct, vecEq } from '@/lib/vector-utils';
 
-import { ButtonArrows } from './common';
 import { RHRProblemType } from './interfaces';
 
 export interface WireFieldState {

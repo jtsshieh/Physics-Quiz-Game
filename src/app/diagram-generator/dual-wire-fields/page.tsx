@@ -19,8 +19,15 @@ import dynamic from 'next/dynamic';
 import { useRef, useState } from 'react';
 
 import { ButtonArrows } from '@/components/button-arrows';
-import { WireField } from '@/games/wire-field';
-import { Directions } from '@/lib/direction-constants';
+import { DualWireFields } from '@/games/dual-wire-fields';
+import {
+	Directions,
+	normalDirections,
+	xDirections,
+	yDirections,
+	zDirections,
+} from '@/lib/direction-constants';
+import { isXAxis, isYAxis, isZAxis } from '@/lib/direction-utils';
 
 const DownloadDialog = dynamic(
 	() => import('@/components/popups/download-dialog'),
@@ -29,24 +36,29 @@ const DownloadDialog = dynamic(
 	},
 );
 
-const wireField = new WireField();
+const dualWireFields = new DualWireFields();
 
-export default function WireFieldDiagramGenerator() {
+export default function DualWireFieldsGenerator() {
 	const [wireFieldState, setWireFieldState] = useState({
-		currentDirection: Directions.IntoPage,
-		radiusDirection: Directions.Right,
-		px: 160,
-		py: 100,
+		currentDirection1: Directions.IntoPage,
+		currentDirection2: Directions.OutOfPage,
+
+		relCurrentDirection: Directions.Left,
+
+		radiusDirection: Directions.None,
+
+		px: 200,
+		py: 200,
 	});
 	const wireFieldRef = useRef<SVGSVGElement>();
 
-	const [tempX, setTempX] = useState('160');
-	const [tempY, setTempY] = useState('100');
+	const [tempX, setTempX] = useState('200');
+	const [tempY, setTempY] = useState('200');
 
 	const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
 
-	const xBound = wireField.getMaxX(wireFieldState.currentDirection);
-	const yBound = wireField.getMaxY(wireFieldState.currentDirection);
+	const xBound = 400;
+	const yBound = 400;
 
 	const sanitizeInput = (temp: string, bound: number) => {
 		let toSet = Number(temp);
@@ -92,30 +104,27 @@ export default function WireFieldDiagramGenerator() {
 					Settings
 				</Typography>
 				<FormControl>
-					<FormLabel>Current Direction</FormLabel>
+					<FormLabel>Current 1 Direction</FormLabel>
 					<RadioGroup
 						orientation="horizontal"
-						value={wireFieldState.currentDirection}
+						value={wireFieldState.currentDirection1}
 						onChange={(e) => {
-							const newCurrentDirection = Number(e.target.value);
-
-							const sanitizedX = sanitizeInput(
-								tempX,
-								wireField.getMaxX(newCurrentDirection),
-							);
-							const sanitizedY = sanitizeInput(
-								tempY,
-								wireField.getMaxY(newCurrentDirection),
-							);
-
+							const newCurrent1 = Number(e.target.value);
+							let newCurrent2 = wireFieldState.currentDirection2;
+							const possibleCurrent2Directions =
+								dualWireFields.getPossibleCurrent2(newCurrent1);
+							if (
+								!possibleCurrent2Directions.includes(
+									wireFieldState.currentDirection2,
+								)
+							) {
+								newCurrent2 = possibleCurrent2Directions[0];
+							}
 							setWireFieldState({
 								...wireFieldState,
-								currentDirection: Number(e.target.value),
-								px: sanitizedX,
-								py: sanitizedY,
+								currentDirection1: newCurrent1,
+								currentDirection2: newCurrent2,
 							});
-							setTempX(sanitizedX.toString());
-							setTempY(sanitizedY.toString());
 						}}
 						sx={{
 							flexWrap: 'wrap',
@@ -127,19 +136,117 @@ export default function WireFieldDiagramGenerator() {
 							},
 						}}
 					>
-						{Object.values(Directions)
-							.slice(0, 6)
-							.map((direction) => (
-								<Radio
-									key={direction}
-									value={direction}
-									disableIcon
-									label={ButtonArrows[direction]}
-									sx={{ margin: 0 }}
-								/>
-							))}
+						{normalDirections.map((direction) => (
+							<Radio
+								key={direction}
+								value={direction}
+								disableIcon
+								label={ButtonArrows[direction]}
+								sx={{ margin: 0 }}
+							/>
+						))}
 					</RadioGroup>
 				</FormControl>
+				<FormControl>
+					<FormLabel>Current 2 Direction</FormLabel>
+					<RadioGroup
+						orientation="horizontal"
+						value={wireFieldState.currentDirection2}
+						onChange={(e) => {
+							setWireFieldState({
+								...wireFieldState,
+								currentDirection2: Number(e.target.value),
+							});
+						}}
+						sx={{
+							flexWrap: 'wrap',
+							rowGap: 1,
+							gap: 1.75,
+							[`& .${radioClasses.checked}`]: {
+								'--variant-borderWidth': '2px',
+								borderColor: 'text.tertiary',
+							},
+						}}
+					>
+						{(isXAxis(wireFieldState.currentDirection1)
+							? xDirections
+							: isYAxis(wireFieldState.currentDirection1)
+								? yDirections
+								: zDirections
+						).map((direction) => (
+							<Radio
+								key={direction}
+								value={direction}
+								disableIcon
+								label={ButtonArrows[direction]}
+								sx={{ margin: 0 }}
+							/>
+						))}
+					</RadioGroup>
+				</FormControl>
+				{isZAxis(wireFieldState.currentDirection1) && (
+					<FormControl>
+						<FormLabel>Relative Current Position</FormLabel>
+						<RadioGroup
+							orientation="horizontal"
+							value={wireFieldState.relCurrentDirection}
+							onChange={(e) => {
+								setWireFieldState({
+									...wireFieldState,
+									relCurrentDirection: Number(e.target.value),
+								});
+							}}
+							sx={{
+								flexWrap: 'wrap',
+								rowGap: 1,
+								gap: 1.75,
+								[`& .${radioClasses.checked}`]: {
+									'--variant-borderWidth': '2px',
+									borderColor: 'text.tertiary',
+								},
+							}}
+						>
+							<Radio
+								value={Directions.Left}
+								disableIcon
+								label={
+									<svg width="50" height="50">
+										<line
+											x1={5}
+											y1={25}
+											x2={45}
+											y2={25}
+											stroke="black"
+											strokeWidth={2}
+											markerEnd="url(#arrow)"
+											markerStart="url(#arrow)"
+										/>
+									</svg>
+								}
+								sx={{ margin: 0 }}
+							/>
+							<Radio
+								value={Directions.Up}
+								disableIcon
+								label={
+									<svg width="50" height="50">
+										<line
+											x1={25}
+											y1={5}
+											x2={25}
+											y2={45}
+											stroke="black"
+											strokeWidth={2}
+											markerEnd="url(#arrow)"
+											markerStart="url(#arrow)"
+										/>
+									</svg>
+								}
+								sx={{ margin: 0 }}
+							/>
+						</RadioGroup>
+					</FormControl>
+				)}
 				<FormControl className={css({ width: '100%' })}>
 					<FormLabel>Point x-coordinate</FormLabel>
 					<div className={hstack({ gap: 8 })}>
@@ -170,7 +277,6 @@ export default function WireFieldDiagramGenerator() {
 						/>
 					</div>
 				</FormControl>
-
 				<FormControl className={css({ width: '100%' })}>
 					<FormLabel>Point y-coordinate</FormLabel>
 					<div className={hstack({ gap: 8 })}>
@@ -232,7 +338,7 @@ export default function WireFieldDiagramGenerator() {
 						minHeight: 0,
 					})}
 				>
-					{wireField.renderDiagram(wireFieldState, wireFieldRef)}
+					{dualWireFields.renderDiagram(wireFieldState, wireFieldRef)}
 				</div>
 			</div>
 		</>
