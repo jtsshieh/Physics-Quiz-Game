@@ -42,9 +42,9 @@ const theme = extendTheme({
 				variant: 'plain',
 			},
 			styleOverrides: {
-				root: ({ theme }) => ({
+				root: {
 					transition: 'background-color 150ms ease-in-out',
-				}),
+				},
 			},
 		},
 		JoyCheckbox: {
@@ -67,10 +67,10 @@ const theme = extendTheme({
 				radio: ({ theme }) => ({
 					borderRadius: theme.vars.radius.lg,
 				}),
-				root: ({ theme }) => ({
+				root: {
 					padding: 4,
 					transition: 'background-color 150ms ease-in-out',
-				}),
+				},
 			},
 		},
 	},

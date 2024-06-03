@@ -129,7 +129,7 @@ export default function WireFieldDiagramGenerator() {
 								color="neutral"
 								variant="solid"
 								value={wireFieldState.px}
-								onChange={(e, val) => {
+								onChange={(_, val) => {
 									setWireFieldState({ ...wireFieldState, px: val as number });
 									setTempX(val.toString());
 								}}
@@ -160,7 +160,7 @@ export default function WireFieldDiagramGenerator() {
 								color="neutral"
 								variant="solid"
 								value={wireFieldState.py}
-								onChange={(e, val) => {
+								onChange={(_, val) => {
 									setWireFieldState({ ...wireFieldState, py: val as number });
 									setTempY(val.toString());
 								}}
