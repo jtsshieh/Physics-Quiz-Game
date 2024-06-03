@@ -382,7 +382,8 @@ function BetterMathJax({ text, x, y }: { text: string; x: number; y: number }) {
 						mathJax.startup.document.updateDocument();
 						// output.children[0].setAttribute('x', x);
 						// output.children[0].setAttribute('y', y);
-						ref.current!.outerHTML = output.children[0].outerHTML;
+						if (ref.current)
+							ref.current.outerHTML = output.children[0].outerHTML;
 					});
 			});
 		}
