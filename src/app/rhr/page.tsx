@@ -30,7 +30,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { ResultSnackbar } from '@/components/popups/result-snackbar';
 import { TransitionDialog } from '@/components/popups/transition-dialog';
-import { allGames } from '@/games';
+import { allGames } from '@/games/index';
 
 export default function RightHandRule() {
 	const [checkerOpen, setCheckerOpen] = useState(false);
