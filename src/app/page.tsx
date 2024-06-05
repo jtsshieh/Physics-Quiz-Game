@@ -25,7 +25,13 @@ export default function Page() {
 					gap: 8,
 				})}
 			>
-				<div className={stack({ direction: 'column', align: 'center' })}>
+				<div
+					className={stack({
+						direction: 'column',
+						align: 'center',
+						textAlign: 'center',
+					})}
+				>
 					<Typography level="h1">
 						Welcome to the{' '}
 						<span
@@ -44,7 +50,7 @@ export default function Page() {
 					</Typography>
 				</div>
 				<div>
-					<Button component={Link} href="#games">
+					<Button component={Link} href="#games" size="lg">
 						View All Games
 					</Button>
 				</div>
@@ -62,7 +68,13 @@ export default function Page() {
 					Elevate your physics studying with these games that generate custom,
 					random, problems on-the-fly
 				</Typography>
-				<div className={grid({ columns: 3 })}>
+				<div
+					className={grid({
+						columns: 1,
+						sm: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
+						lg: { gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' },
+					})}
+				>
 					<Card>
 						<CardContent>
 							<Typography level="h3">Right Hand Rule</Typography>
@@ -92,7 +104,13 @@ export default function Page() {
 				<Typography level="body-md">
 					Enhance your physics-teaching experience with these helpful tools.
 				</Typography>
-				<div className={grid({ columns: 3 })}>
+				<div
+					className={grid({
+						columns: 1,
+						sm: { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
+						lg: { gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' },
+					})}
+				>
 					<Card>
 						<CardContent>
 							<Typography level="h3">Diagram Generator</Typography>
