@@ -8,6 +8,7 @@ import {
 	Directions,
 	allDirections,
 	normalDirections,
+	xDirections,
 	xyDirections,
 	yDirections,
 } from '@/lib/direction-constants';
@@ -40,7 +41,7 @@ export class WireField implements RHRProblemType<WireFieldState> {
 		} else if (isXAxis(currentDirection)) {
 			return yDirections;
 		} else if (isYAxis(currentDirection)) {
-			return xyDirections;
+			return xDirections;
 		} else {
 			return allDirections;
 		}
